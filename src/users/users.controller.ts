@@ -27,7 +27,7 @@ export class UsersController {
 
   @Get()
   getAll(@Query() dto: QueryUserDto): Promise<PaginationResult<User>> {
-    return this.usersService.findAll(dto);
+    return this.usersService.findPage(dto);
   }
 
   @Post()

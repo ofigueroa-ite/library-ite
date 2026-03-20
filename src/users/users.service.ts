@@ -93,7 +93,7 @@ export class UsersService {
     return user;
   }
 
-  async findAll(dto: QueryUserDto): Promise<PaginationResult<User>> {
+  async findPage(dto: QueryUserDto): Promise<PaginationResult<User>> {
     const {
       limit,
       page,
