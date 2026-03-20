@@ -4,66 +4,17 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { SortOrder } from "src/common/enums/sort-order";
-import { PaginationResult } from "src/common/interfaces/pagination-result";
-import { Repository, SelectQueryBuilder } from "typeorm";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { QueryUserDto, UserSortBy } from "./dtos/query-user.dto";
-import { UpdateUserDto } from "./dtos/update-user.dto";
+import { CrudService } from "src/common/interfaces/crud-service.interface";
+import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
+import { Repository } from "typeorm";
+import { UsersCreateDto } from "./dtos/users-create.dto";
+import { UsersPaginationQueryDto } from "./dtos/users-pagination-query.dto";
+import { UsersUpdateDto } from "./dtos/users-update.dto";
+import { UsersPaginationQueryBuilder } from "./query-builders/users-pagination-query.builder";
 import { User } from "./users.entity";
 
-class UserQueryBuilder {
-  private readonly query: SelectQueryBuilder<User>;
-  constructor(private readonly repository: Repository<User>) {
-    this.query = this.repository.createQueryBuilder("user");
-  }
-
-  withSearch(search?: string): this {
-    if (search) {
-      this.query.where("user.name ILIKE :search OR user.email ILIKE :search", {
-        search: `%${search}%`,
-      });
-    }
-    return this;
-  }
-
-  withCreateDateRange(createdFrom?: Date, createdTo?: Date): this {
-    if (createdFrom) {
-      this.query.andWhere("user.createdAt >= :createdFrom", { createdFrom });
-    }
-    if (createdTo) {
-      this.query.andWhere("user.createdAt <= :createdTo", { createdTo });
-    }
-    return this;
-  }
-
-  withUpdateDateRange(updatedFrom?: Date, updatedTo?: Date): this {
-    if (updatedFrom) {
-      this.query.andWhere("user.updatedAt >= :updatedFrom", { updatedFrom });
-    }
-    if (updatedTo) {
-      this.query.andWhere("user.updatedAt <= :updatedTo", { updatedTo });
-    }
-    return this;
-  }
-
-  withSorting(sortBy: UserSortBy, sortOrder: SortOrder): this {
-    this.query.orderBy(`user.${sortBy}`, sortOrder);
-    return this;
-  }
-
-  withPagination(skip: number, limit: number): this {
-    this.query.skip(skip).take(limit);
-    return this;
-  }
-
-  build(): SelectQueryBuilder<User> {
-    return this.query;
-  }
-}
-
 @Injectable()
-export class UsersService {
+export class UsersService implements CrudService<User> {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -93,7 +44,9 @@ export class UsersService {
     return user;
   }
 
-  async findAll(dto: QueryUserDto): Promise<PaginationResult<User>> {
+  async findPage(
+    dto: UsersPaginationQueryDto
+  ): Promise<PaginationResult<User>> {
     const {
       limit,
       page,
@@ -107,7 +60,9 @@ export class UsersService {
       updatedTo,
     } = dto;
 
-    const [data, total] = await new UserQueryBuilder(this.usersRepository)
+    const [data, total] = await new UsersPaginationQueryBuilder(
+      this.usersRepository
+    )
       .withSearch(search)
       .withCreateDateRange(createdFrom, createdTo)
       .withUpdateDateRange(updatedFrom, updatedTo)
@@ -136,13 +91,13 @@ export class UsersService {
     }
   }
 
-  async create(dto: CreateUserDto): Promise<User> {
+  async create(dto: UsersCreateDto): Promise<User> {
     await this.throwIfEmailExists(dto.email);
     const newUser = this.usersRepository.create(dto);
     return this.usersRepository.save(newUser);
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
+  async update(id: string, dto: UsersUpdateDto): Promise<User> {
     const user = await this.findByIdOrThrow(id);
     if (dto.email && dto.email !== user.email) {
       await this.throwIfEmailExists(dto.email);
