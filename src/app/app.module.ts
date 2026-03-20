@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
+import { OtpModule } from "src/otp/otp.module";
 import { UsersModule } from "src/users/users.module";
 
 @Module({
@@ -13,6 +14,10 @@ import { UsersModule } from "src/users/users.module";
         VERSION: Joi.string()
           .pattern(/^\d+\.\d+\.\d+$/)
           .required(),
+        OTP_TTL_MINUTES: Joi.number().integer().required(),
+        OTP_CHARSET: Joi.string().token().required(),
+        OTP_LENGTH: Joi.number().integer().min(6).required(),
+        OTP_SECRET: Joi.string().not().empty().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -22,6 +27,7 @@ import { UsersModule } from "src/users/users.module";
       synchronize: false,
     }),
     UsersModule,
+    OtpModule,
   ],
 })
 export class AppModule {}
