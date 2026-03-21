@@ -1,73 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { SortOrder } from "src/common/enums/sort-order";
-import { PaginationResult } from "src/common/interfaces/pagination-result";
-import { Repository, SelectQueryBuilder } from "typeorm";
-import { CreateOtpDto } from "./dtos/create-otp.dto";
-import { OtpSortBy, QueryOtpDto } from "./dtos/query-otp.dto";
-import { UpdateOtpDto } from "./dtos/update-otp.dto";
+import { CrudService } from "src/common/interfaces/crud-service.interface";
+import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
+import { Repository } from "typeorm";
+import { OtpCreateDto } from "./dtos/otp-create.dto";
+import { OtpPaginationQueryDto } from "./dtos/otp-pagination-query.dto";
+import { OtpUpdateDto } from "./dtos/otp-update.dto";
 import { Otp } from "./otp.entity";
-
-class OtpQueryBuilder {
-  private readonly query: SelectQueryBuilder<Otp>;
-  constructor(repository: Repository<Otp>) {
-    this.query = repository.createQueryBuilder("otp");
-  }
-
-  withSearch(search?: string): this {
-    if (search) {
-      this.query.where("code ILIKE :search", { search: `%${search}%` });
-    }
-    return this;
-  }
-
-  withCreateDateRange(createdFrom?: Date, createdTo?: Date): this {
-    if (createdFrom) {
-      this.query.andWhere("user.createdAt >= :createdFrom", { createdFrom });
-    }
-    if (createdTo) {
-      this.query.andWhere("user.createdAt <= :createdTo", { createdTo });
-    }
-    return this;
-  }
-
-  withUpdateDateRange(updatedFrom?: Date, updatedTo?: Date): this {
-    if (updatedFrom) {
-      this.query.andWhere("user.updatedAt >= :updatedFrom", { updatedFrom });
-    }
-    if (updatedTo) {
-      this.query.andWhere("user.updatedAt <= :updatedTo", { updatedTo });
-    }
-    return this;
-  }
-
-  withExpiresDateRange(expiresFrom?: Date, expiresTo?: Date): this {
-    if (expiresFrom) {
-      this.query.andWhere("expiresAt >= :expiresFrom", { expiresFrom });
-    }
-    if (expiresTo) {
-      this.query.andWhere("expiresAt <= :expiresTo", { expiresTo });
-    }
-    return this;
-  }
-
-  withSorting(sortBy: OtpSortBy, sortOrder: SortOrder): this {
-    this.query.orderBy(sortBy, sortOrder);
-    return this;
-  }
-
-  withPagination(skip: number, limit: number): this {
-    this.query.skip(skip).take(limit);
-    return this;
-  }
-
-  build(): SelectQueryBuilder<Otp> {
-    return this.query;
-  }
-}
+import { OtpPaginationQueryBuilder } from "./query-builders/otp-pagination-query.builder";
 
 @Injectable()
-export class OtpService {
+export class OtpService implements CrudService<Otp> {
   constructor(
     @InjectRepository(Otp) private readonly otpRepository: Repository<Otp>
   ) {}
@@ -96,7 +39,7 @@ export class OtpService {
     return otp;
   }
 
-  async findPage(dto: QueryOtpDto): Promise<PaginationResult<Otp>> {
+  async findPage(dto: OtpPaginationQueryDto): Promise<PaginationResult<Otp>> {
     const {
       limit,
       page,
@@ -112,7 +55,9 @@ export class OtpService {
       expiresTo,
     } = dto;
 
-    const [data, total] = await new OtpQueryBuilder(this.otpRepository)
+    const [data, total] = await new OtpPaginationQueryBuilder(
+      this.otpRepository
+    )
       .withSearch(search)
       .withCreateDateRange(createdFrom, createdTo)
       .withUpdateDateRange(updatedFrom, updatedTo)
@@ -135,7 +80,7 @@ export class OtpService {
     };
   }
 
-  create(dto: CreateOtpDto): Promise<Otp> {
+  create(dto: OtpCreateDto): Promise<Otp> {
     dto;
     const otp = this.otpRepository.create({
       code: Math.random().toString(36).substring(2, 8).toUpperCase(),
@@ -144,7 +89,7 @@ export class OtpService {
     return this.otpRepository.save(otp);
   }
 
-  async update(id: string, dto: UpdateOtpDto): Promise<Otp> {
+  async update(id: string, dto: OtpUpdateDto): Promise<Otp> {
     const otp = await this.findByIdOrThrow(id);
     Object.assign(otp, dto);
     return this.otpRepository.save(otp);

@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from "class-validator";
 
-export class UpdateOtpDto {
+export class OtpUpdateDto {
   @IsOptional()
   @IsDateString()
   @Type(() => Date)

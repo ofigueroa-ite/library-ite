@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { SortOrder } from "src/common/enums/sort-order";
+import { PaginationSortOrder } from "src/common/enums/pagination-sort-order.enum";
 
 export enum OtpSortBy {
   ID = "id",
@@ -11,7 +11,7 @@ export enum OtpSortBy {
   CODE = "code",
 }
 
-export class QueryOtpDto extends PaginationDto {
+export class OtpPaginationQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;
@@ -33,6 +33,6 @@ export class QueryOtpDto extends PaginationDto {
 
   @IsOptional()
   @IsString()
-  @IsEnum(SortOrder)
-  sortOrder: SortOrder = SortOrder.DESC;
+  @IsEnum(PaginationSortOrder)
+  sortOrder: PaginationSortOrder = PaginationSortOrder.DESC;
 }

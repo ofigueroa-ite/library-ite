@@ -9,10 +9,10 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { PaginationResult } from "src/common/interfaces/pagination-result";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { QueryUserDto } from "./dtos/query-user.dto";
-import { UpdateUserDto } from "./dtos/update-user.dto";
+import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
+import { UsersCreateDto } from "./dtos/users-create.dto";
+import { UsersPaginationQueryDto } from "./dtos/users-pagination-query.dto";
+import { UsersUpdateDto } from "./dtos/users-update.dto";
 import { User } from "./users.entity";
 import { UsersService } from "./users.service";
 
@@ -26,19 +26,21 @@ export class UsersController {
   }
 
   @Get()
-  getAll(@Query() dto: QueryUserDto): Promise<PaginationResult<User>> {
+  getAll(
+    @Query() dto: UsersPaginationQueryDto
+  ): Promise<PaginationResult<User>> {
     return this.usersService.findPage(dto);
   }
 
   @Post()
-  create(@Body() dto: CreateUserDto): Promise<User> {
+  create(@Body() dto: UsersCreateDto): Promise<User> {
     return this.usersService.create(dto);
   }
 
   @Patch(":id")
   update(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() dto: UpdateUserDto
+    @Body() dto: UsersUpdateDto
   ): Promise<User> {
     return this.usersService.update(id, dto);
   }

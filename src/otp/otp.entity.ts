@@ -1,4 +1,4 @@
-import { BaseEntity } from "src/common/entities/base";
+import { BaseEntity } from "src/common/entities/base.entity";
 import { User } from "src/users/users.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
@@ -9,6 +9,9 @@ export class Otp extends BaseEntity {
 
   @Column({ nullable: false })
   expiresAt: Date;
+
+  @Column({ name: "user_id", type: "uuid", nullable: false })
+  userId: string;
 
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
