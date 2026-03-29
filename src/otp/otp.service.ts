@@ -2,9 +2,12 @@ import { createHmac, randomBytes } from "node:crypto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
+import { createElement } from "react";
 import { CrudService } from "src/common/interfaces/crud-service.interface";
 import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
+import { MailerService } from "src/mailer/mailer.service";
+import { OtpTemplate } from "src/mailer/templates/otp.template";
 import { UsersService } from "src/users/users.service";
 import { Repository } from "typeorm";
 import { OtpCreateDto } from "./dtos/otp-create.dto";
@@ -22,7 +25,8 @@ export class OtpService implements CrudService<Otp> {
   constructor(
     @InjectRepository(Otp) private readonly otpRepository: Repository<Otp>,
     private readonly configService: ConfigService<EnvironmentVariables, true>,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly mailerService: MailerService
   ) {
     this.otpCharset = this.configService.get<string>("OTP_CHARSET", {
       infer: true,
@@ -41,6 +45,18 @@ export class OtpService implements CrudService<Otp> {
 
   async findByIdOrThrow(id: string): Promise<Otp> {
     const otp = await this.otpRepository.findOneBy({ id });
+    if (!otp) {
+      throw new NotFoundException("OTP not found");
+    }
+    return otp;
+  }
+
+  findByUserId(userId: string): Promise<Otp | null> {
+    return this.otpRepository.findOneBy({ userId });
+  }
+
+  async findByUserIdOrThrow(userId: string): Promise<Otp> {
+    const otp = await this.otpRepository.findOneBy({ userId });
     if (!otp) {
       throw new NotFoundException("OTP not found");
     }
@@ -89,15 +105,25 @@ export class OtpService implements CrudService<Otp> {
   }
 
   async create(dto: OtpCreateDto): Promise<Otp> {
-    await this.usersService.findByIdOrThrow(dto.userId);
+    const user = await this.usersService.findByIdOrThrow(dto.userId);
+    await this.otpRepository.softDelete({ userId: dto.userId });
     const otpTtlMinutes = this.configService.get("OTP_TTL_MINUTES");
     const code = this.generateCode();
     const otp = this.otpRepository.create({
       hash: this.hmac(code),
       expiresAt: new Date(Date.now() + otpTtlMinutes * 60 * 1000),
-      userId: dto.userId, // Expires in 5 minutes
+      userId: dto.userId,
     });
-    return this.otpRepository.save(otp);
+    const savedOtp = await this.otpRepository.save(otp);
+    const emailHtml = await this.mailerService.renderTemplate(
+      createElement(OtpTemplate, { code, user })
+    );
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: "Your OTP code",
+      html: emailHtml,
+    });
+    return savedOtp;
   }
 
   async update(id: string, dto: OtpUpdateDto): Promise<Otp> {

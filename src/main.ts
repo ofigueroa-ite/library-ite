@@ -1,7 +1,11 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from "./app/app.module";
 import "reflect-metadata";
-import { ValidationPipe, VersioningType } from "@nestjs/common";
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
@@ -13,6 +17,8 @@ async function bootstrap() {
     })
   );
 
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: "1",
@@ -22,6 +28,7 @@ async function bootstrap() {
     .setTitle("Library ITE API")
     .setDescription("API for the Library ITE system")
     .setVersion(process.env.VERSION || "0.0.0")
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

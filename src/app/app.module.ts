@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
+import { AuthModule } from "src/auth/auth.module";
 import { OtpModule } from "src/otp/otp.module";
 import { UsersModule } from "src/users/users.module";
 
@@ -18,6 +19,13 @@ import { UsersModule } from "src/users/users.module";
         OTP_CHARSET: Joi.string().token().required(),
         OTP_LENGTH: Joi.number().integer().min(6).required(),
         OTP_SECRET: Joi.string().not().empty().required(),
+        OTP_MAX_ATTEMPTS: Joi.number().integer().required(),
+        SMTP_HOST: Joi.string().required(),
+        SMTP_PORT: Joi.number().integer().required(),
+        SMTP_USER: Joi.string().required(),
+        SMTP_PASSWORD: Joi.string().required(),
+        MAILER_FROM: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.number().integer().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -28,6 +36,7 @@ import { UsersModule } from "src/users/users.module";
     }),
     UsersModule,
     OtpModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -13,5 +13,17 @@
         "noInferrableTypes": "off"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/main.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ]
 }
