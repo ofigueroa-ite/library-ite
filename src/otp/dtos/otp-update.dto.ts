@@ -2,6 +2,7 @@ import { Type } from "class-transformer";
 import {
   IsDateString,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
@@ -23,4 +24,8 @@ export class OtpUpdateDto {
   @IsNotEmpty()
   @IsUUID()
   userId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  attempts?: number;
 }
