@@ -1,7 +1,8 @@
-import { createHmac, randomBytes } from "node:crypto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
+import { hash } from "bcrypt";
+import { customAlphabet } from "nanoid";
 import { createElement } from "react";
 import { CrudService } from "src/common/interfaces/crud-service.interface";
 import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
@@ -18,9 +19,7 @@ import { OtpPaginationQueryBuilder } from "./query-builders/otp-pagination-query
 
 @Injectable()
 export class OtpService implements CrudService<Otp> {
-  private readonly otpCharset: string;
-  private readonly otpLength: number;
-  private readonly otpSecret: string;
+  private readonly nanoid: ReturnType<typeof customAlphabet>;
 
   constructor(
     @InjectRepository(Otp) private readonly otpRepository: Repository<Otp>,
@@ -28,15 +27,13 @@ export class OtpService implements CrudService<Otp> {
     private readonly usersService: UsersService,
     private readonly mailerService: MailerService
   ) {
-    this.otpCharset = this.configService.get<string>("OTP_CHARSET", {
+    const otpCharset = this.configService.get<string>("OTP_CHARSET", {
       infer: true,
     });
-    this.otpLength = this.configService.get<number>("OTP_LENGTH", {
+    const otpLength = this.configService.get<number>("OTP_LENGTH", {
       infer: true,
     });
-    this.otpSecret = this.configService.get<string>("OTP_SECRET", {
-      infer: true,
-    });
+    this.nanoid = customAlphabet(otpCharset, otpLength);
   }
 
   findById(id: string): Promise<Otp | null> {
@@ -108,9 +105,10 @@ export class OtpService implements CrudService<Otp> {
     const user = await this.usersService.findByIdOrThrow(dto.userId);
     await this.otpRepository.softDelete({ userId: dto.userId });
     const otpTtlMinutes = this.configService.get("OTP_TTL_MINUTES");
-    const code = this.generateCode();
+    const code = this.nanoid();
+    const hashedCode = await hash(code, 10);
     const otp = this.otpRepository.create({
-      hash: this.hmac(code),
+      hash: hashedCode,
       expiresAt: new Date(Date.now() + otpTtlMinutes * 60 * 1000),
       userId: dto.userId,
     });
@@ -135,31 +133,5 @@ export class OtpService implements CrudService<Otp> {
   async delete(id: string): Promise<void> {
     await this.findByIdOrThrow(id);
     await this.otpRepository.softDelete({ id });
-  }
-
-  generateCode(
-    length: number = this.otpLength,
-    charset: string = this.otpCharset
-  ): string {
-    const maxValid = Math.floor(256 / charset.length) * charset.length;
-    const result: string[] = [];
-
-    while (result.length < length) {
-      const bytes = randomBytes(length * 2);
-      for (const b of bytes) {
-        if (result.length === length) {
-          break;
-        }
-        if (b < maxValid) {
-          result.push(charset[b % charset.length]);
-        }
-      }
-    }
-
-    return result.join("");
-  }
-
-  hmac(otp: string, secret: string = this.otpSecret): string {
-    return createHmac("sha256", secret).update(otp).digest("hex");
   }
 }

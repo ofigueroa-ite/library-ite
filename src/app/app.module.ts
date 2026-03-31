@@ -18,7 +18,6 @@ import { UsersModule } from "src/users/users.module";
         OTP_TTL_MINUTES: Joi.number().integer().required(),
         OTP_CHARSET: Joi.string().token().required(),
         OTP_LENGTH: Joi.number().integer().min(6).required(),
-        OTP_SECRET: Joi.string().not().empty().required(),
         OTP_MAX_ATTEMPTS: Joi.number().integer().required(),
         SMTP_HOST: Joi.string().required(),
         SMTP_PORT: Joi.number().integer().required(),

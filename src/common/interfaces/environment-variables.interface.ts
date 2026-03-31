@@ -4,7 +4,6 @@ export interface EnvironmentVariables {
   MAILER_FROM: string;
   OTP_CHARSET: string;
   OTP_LENGTH: number;
-  OTP_SECRET: string;
   OTP_TTL_MINUTES: number;
   SMTP_HOST: string;
   SMTP_PASSWORD: string;
