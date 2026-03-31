@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
 import { AuthModule } from "src/auth/auth.module";
 import { OtpModule } from "src/otp/otp.module";
+import { RolesModule } from "src/roles/roles.module";
 import { UsersModule } from "src/users/users.module";
 
 @Module({
@@ -34,6 +35,7 @@ import { UsersModule } from "src/users/users.module";
       synchronize: false,
     }),
     UsersModule,
+    RolesModule,
     OtpModule,
     AuthModule,
   ],
