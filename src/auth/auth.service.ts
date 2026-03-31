@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { compare } from "bcrypt";
 import { OtpService } from "../otp/otp.service";
 import { UsersService } from "../users/users.service";
 import { AuthVerifyDto } from "./dtos/auth-verify.dto";
@@ -38,8 +39,8 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const expectedHash = this.otpService.hmac(dto.otp);
-    if (otp.hash !== expectedHash) {
+    const codesMatch = await compare(dto.otp, otp.hash);
+    if (!codesMatch) {
       otp.attempts += 1;
       await this.otpService.update(otp.id, { attempts: otp.attempts });
       throw new UnauthorizedException();
