@@ -32,7 +32,7 @@ export class AuthJwtGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const user = await this.usersService.findById(decodedToken.sub);
+    const user = await this.usersService.findByIdOrThrow(decodedToken.sub);
     if (!user) {
       throw new UnauthorizedException();
     }
