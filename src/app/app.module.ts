@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
 import { AuthModule } from "src/auth/auth.module";
+import { CaslModule } from "src/casl/casl.module";
 import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
 import { RolesModule } from "src/roles/roles.module";
@@ -40,6 +41,7 @@ import { UsersModule } from "src/users/users.module";
     PermissionsModule,
     OtpModule,
     AuthModule,
+    CaslModule,
   ],
 })
 export class AppModule {}

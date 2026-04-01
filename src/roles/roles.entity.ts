@@ -10,6 +10,9 @@ export class Role extends BaseEntity {
   })
   name: string;
 
+  @Column({ nullable: false, unique: true })
+  priority: number;
+
   @OneToMany(
     () => Permission,
     (permission) => permission.role

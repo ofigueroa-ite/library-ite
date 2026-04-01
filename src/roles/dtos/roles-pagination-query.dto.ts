@@ -7,6 +7,7 @@ export enum RolesPaginationSortBy {
   CREATED_AT = "createdAt",
   UPDATED_AT = "updatedAt",
   NAME = "name",
+  PRIORITY = "priority",
 }
 
 export class RolesPaginationQueryDto extends PaginationDto {

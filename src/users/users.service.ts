@@ -21,11 +21,17 @@ export class UsersService implements CrudService<User> {
   ) {}
 
   findById(id: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ["roles", "roles.permissions"],
+    });
   }
 
   async findByIdOrThrow(id: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ["roles", "roles.permissions"],
+    });
     if (!user) {
       throw new NotFoundException();
     }
