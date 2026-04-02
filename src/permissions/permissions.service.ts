@@ -1,11 +1,13 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CrudService } from "src/common/interfaces/crud-service.interface";
 import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
+import { RolesService } from "src/roles/roles.service";
 import { FindOptionsWhere, Repository } from "typeorm";
 import { PermissionsCreateDto } from "./dtos/permissions-create.dto";
 import { PermissionsPaginationQueryDto } from "./dtos/permissions-pagination-query.dto";
@@ -17,7 +19,8 @@ import { PermissionsPaginationQueryBuilder } from "./query-builders/permissions-
 export class PermissionsService implements CrudService<Permission> {
   constructor(
     @InjectRepository(Permission)
-    private readonly permissionsRepository: Repository<Permission>
+    private readonly permissionsRepository: Repository<Permission>,
+    private readonly rolesService: RolesService
   ) {}
 
   findById(id: string): Promise<Permission | null> {
@@ -91,13 +94,24 @@ export class PermissionsService implements CrudService<Permission> {
   async update(id: string, dto: PermissionsUpdateDto): Promise<Permission> {
     const { action, subject, roleId, inverted } = dto;
     await this.throwIfPermissionExists({ roleId, action, subject, inverted });
+
+    const superAdminRole = await this.rolesService.findSuperAdminRole();
+
     const permission = await this.findByIdOrThrow(id);
+    if (superAdminRole?.id === permission.roleId) {
+      throw new ForbiddenException();
+    }
     Object.assign(permission, dto);
     return this.permissionsRepository.save(permission);
   }
 
   async delete(id: string): Promise<void> {
+    const superAdminRole = await this.rolesService.findSuperAdminRole();
     const permission = await this.findByIdOrThrow(id);
+
+    if (superAdminRole?.id === permission.roleId) {
+      throw new ForbiddenException();
+    }
     await this.permissionsRepository.softDelete({ id: permission.id });
   }
 }

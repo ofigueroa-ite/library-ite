@@ -7,6 +7,7 @@ import { CaslModule } from "src/casl/casl.module";
 import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
 import { RolesModule } from "src/roles/roles.module";
+import { SeederModule } from "src/seeder/seeder.module";
 import { UsersModule } from "src/users/users.module";
 import { UsersRolesModule } from "src/users-roles/users-roles.module";
 
@@ -29,6 +30,10 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
         SMTP_PASSWORD: Joi.string().required(),
         MAILER_FROM: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.number().integer().required(),
+        SEEDER_SUPER_ADMIN_EMAIL: Joi.string().email().required(),
+        SEEDER_SUPER_ADMIN_ROLE_NAME: Joi.string().required(),
+        SEEDER_SUPER_ADMIN_NAME: Joi.string().required(),
+        SEEDER_SUPER_ADMIN_SURNAME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -44,6 +49,7 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     OtpModule,
     AuthModule,
     CaslModule,
+    SeederModule,
   ],
 })
 export class AppModule {}

@@ -39,7 +39,10 @@ export class UsersService implements CrudService<User> {
   }
 
   findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ email });
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ["roles", "roles.permissions"],
+    });
   }
 
   async findByEmailOrThrow(email: string): Promise<User> {
