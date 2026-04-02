@@ -14,12 +14,12 @@ export class MailerService {
   ) {
     this.from = this.configService.get("MAILER_FROM", { infer: true });
     this.transporter = createTransport({
-      host: this.configService.get("SMTP_HOST", { infer: true }),
-      port: this.configService.get("SMTP_PORT", { infer: true }),
+      host: this.configService.get("MAILER_SMTP_HOST", { infer: true }),
+      port: this.configService.get("MAILER_SMTP_PORT", { infer: true }),
       secure: false,
       auth: {
-        user: this.configService.get("SMTP_USER", { infer: true }),
-        pass: this.configService.get("SMTP_PASSWORD", { infer: true }),
+        user: this.configService.get("MAILER_SMTP_USER", { infer: true }),
+        pass: this.configService.get("MAILER_SMTP_PASSWORD", { infer: true }),
       },
     });
   }
