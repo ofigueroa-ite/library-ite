@@ -24,6 +24,7 @@ import { User } from "./users.entity";
 import { UsersService } from "./users.service";
 
 @ApiBearerAuth()
+@UseGuards(CaslAbilitiesGuard)
 @UseGuards(AuthJwtGuard)
 @Controller("users")
 export class UsersController {
@@ -34,7 +35,6 @@ export class UsersController {
     return this.usersService.findByIdOrThrow(id);
   }
 
-  @UseGuards(CaslAbilitiesGuard)
   @CheckAbilities((ability) => ability.can(CaslAction.READ, CaslSubject.USERS))
   @Get()
   getAll(
