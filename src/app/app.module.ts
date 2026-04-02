@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
 import { AuthModule } from "src/auth/auth.module";
 import { CaslModule } from "src/casl/casl.module";
+import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
 import { RolesModule } from "src/roles/roles.module";
@@ -16,31 +17,37 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        DATABASE_URL: Joi.string().required(),
-        VERSION: Joi.string()
+        APP_DATABASE_URL: Joi.string().required(),
+        APP_VERSION: Joi.string()
           .pattern(/^\d+\.\d+\.\d+$/)
           .required(),
+        AUTH_JWT_EXPIRES_IN: Joi.number().integer().required(),
+        MAILER_SMTP_HOST: Joi.string().required(),
+        MAILER_SMTP_PORT: Joi.number().integer().required(),
+        MAILER_SMTP_USER: Joi.string().required(),
+        MAILER_SMTP_PASSWORD: Joi.string().required(),
+        MAILER_FROM: Joi.string().required(),
         OTP_TTL_MINUTES: Joi.number().integer().required(),
         OTP_CHARSET: Joi.string().token().required(),
         OTP_LENGTH: Joi.number().integer().min(6).required(),
         OTP_MAX_ATTEMPTS: Joi.number().integer().required(),
-        SMTP_HOST: Joi.string().required(),
-        SMTP_PORT: Joi.number().integer().required(),
-        SMTP_USER: Joi.string().required(),
-        SMTP_PASSWORD: Joi.string().required(),
-        MAILER_FROM: Joi.string().required(),
-        JWT_EXPIRES_IN: Joi.number().integer().required(),
         SEEDER_SUPER_ADMIN_EMAIL: Joi.string().email().required(),
         SEEDER_SUPER_ADMIN_ROLE_NAME: Joi.string().required(),
         SEEDER_SUPER_ADMIN_NAME: Joi.string().required(),
         SEEDER_SUPER_ADMIN_SURNAME: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRoot({
-      type: "better-sqlite3",
-      database: process.env.DATABASE_URL,
-      autoLoadEntities: true,
-      synchronize: false,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (
+        configService: ConfigService<EnvironmentVariables, true>
+      ) => ({
+        type: "better-sqlite3",
+        database: configService.get("APP_DATABASE_URL", { infer: true }),
+        autoLoadEntities: true,
+        synchronize: false,
+      }),
     }),
     UsersModule,
     RolesModule,

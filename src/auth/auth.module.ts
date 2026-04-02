@@ -17,7 +17,7 @@ import { AuthService } from "./auth.service";
       ) => ({
         secret: configService.get<string>("JWT_SECRET", { infer: true }),
         signOptions: {
-          expiresIn: `${configService.get<number>("JWT_EXPIRES_IN", { infer: true })}s`,
+          expiresIn: `${configService.get<number>("AUTH_JWT_EXPIRES_IN", { infer: true })}s`,
         },
       }),
       global: true,

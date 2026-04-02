@@ -27,7 +27,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle("Library ITE API")
     .setDescription("API for the Library ITE system")
-    .setVersion(process.env.VERSION || "0.0.0")
+    .setVersion(process.env.APP_VERSION || "0.0.0")
     .addBearerAuth()
     .build();
 
