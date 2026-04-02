@@ -1,10 +1,13 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CrudService } from "src/common/interfaces/crud-service.interface";
+import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
 import { Repository } from "typeorm";
 import { RolesCreateDto } from "./dtos/roles-create.dto";
@@ -15,10 +18,17 @@ import { Role } from "./roles.entity";
 
 @Injectable()
 export class RolesService implements CrudService<Role> {
+  private readonly superAdminRoleName: string;
   constructor(
     @InjectRepository(Role)
-    private readonly rolesRepository: Repository<Role>
-  ) {}
+    private readonly rolesRepository: Repository<Role>,
+    private readonly configService: ConfigService<EnvironmentVariables, true>
+  ) {
+    this.superAdminRoleName = this.configService.get(
+      "SEEDER_SUPER_ADMIN_ROLE_NAME",
+      { infer: true }
+    );
+  }
 
   findById(id: string): Promise<Role | null> {
     return this.rolesRepository.findOneBy({ id });
@@ -33,7 +43,14 @@ export class RolesService implements CrudService<Role> {
   }
 
   findByName(name: string): Promise<Role | null> {
-    return this.rolesRepository.findOneBy({ name });
+    return this.rolesRepository.findOne({
+      where: { name },
+      relations: ["permissions"],
+    });
+  }
+
+  findSuperAdminRole(): Promise<Role | null> {
+    return this.findByName(this.superAdminRoleName);
   }
 
   async findByNameOrThrow(name: string): Promise<Role> {
@@ -99,6 +116,11 @@ export class RolesService implements CrudService<Role> {
 
   async update(id: string, dto: RolesUpdateDto): Promise<Role> {
     const role = await this.findByIdOrThrow(id);
+
+    if (role.name === this.superAdminRoleName) {
+      throw new ForbiddenException();
+    }
+
     if (dto.name && dto.name !== role.name) {
       await this.throwIfRoleNameExists(dto.name);
     }
@@ -107,6 +129,12 @@ export class RolesService implements CrudService<Role> {
   }
 
   async delete(id: string): Promise<void> {
+    const superAdminRole = await this.findSuperAdminRole();
+
+    if (superAdminRole?.id === id) {
+      throw new ForbiddenException();
+    }
+
     await this.findByIdOrThrow(id);
     await this.rolesRepository.softDelete({ id });
   }

@@ -5,6 +5,10 @@ export interface EnvironmentVariables {
   OTP_CHARSET: string;
   OTP_LENGTH: number;
   OTP_TTL_MINUTES: number;
+  SEEDER_SUPER_ADMIN_EMAIL: string;
+  SEEDER_SUPER_ADMIN_NAME: string;
+  SEEDER_SUPER_ADMIN_ROLE_NAME: string;
+  SEEDER_SUPER_ADMIN_SURNAME: string;
   SMTP_HOST: string;
   SMTP_PASSWORD: string;
   SMTP_PORT: number;
