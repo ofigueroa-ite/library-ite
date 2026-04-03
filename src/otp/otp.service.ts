@@ -20,6 +20,7 @@ import { OtpPaginationQueryBuilder } from "./query-builders/otp-pagination-query
 @Injectable()
 export class OtpService implements CrudService<Otp> {
   private readonly nanoid: ReturnType<typeof customAlphabet>;
+  private readonly otpTTL: number;
 
   constructor(
     @InjectRepository(Otp) private readonly otpRepository: Repository<Otp>,
@@ -33,6 +34,7 @@ export class OtpService implements CrudService<Otp> {
     const otpLength = this.configService.get<number>("OTP_LENGTH", {
       infer: true,
     });
+    this.otpTTL = this.configService.get("OTP_TTL_MINUTES", { infer: true });
     this.nanoid = customAlphabet(otpCharset, otpLength);
   }
 
@@ -104,12 +106,11 @@ export class OtpService implements CrudService<Otp> {
   async create(dto: OtpCreateDto): Promise<Otp> {
     const user = await this.usersService.findByIdOrThrow(dto.userId);
     await this.otpRepository.softDelete({ userId: dto.userId });
-    const otpTtlMinutes = this.configService.get("OTP_TTL_MINUTES");
     const code = this.nanoid();
     const hashedCode = await hash(code, 10);
     const otp = this.otpRepository.create({
       hash: hashedCode,
-      expiresAt: new Date(Date.now() + otpTtlMinutes * 60 * 1000),
+      expiresAt: new Date(Date.now() + this.otpTTL * 60 * 1000),
       userId: dto.userId,
     });
     const savedOtp = await this.otpRepository.save(otp);
@@ -118,7 +119,7 @@ export class OtpService implements CrudService<Otp> {
     );
     await this.mailerService.sendMail({
       to: user.email,
-      subject: "Your OTP code",
+      subject: "Tu código OTP",
       html: emailHtml,
     });
     return savedOtp;
