@@ -16,7 +16,7 @@
   },
   "overrides": [
     {
-      "includes": ["src/main.ts"],
+      "includes": ["backend/src/main.ts"],
       "linter": {
         "rules": {
           "correctness": {
