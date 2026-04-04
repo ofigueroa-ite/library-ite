@@ -1,4 +1,5 @@
 export interface EnvironmentVariables {
+  APP_CORS_ORIGINS: string[];
   APP_DATABASE_URL: string;
   APP_VERSION: string;
   AUTH_JWT_EXPIRES_IN: number;
