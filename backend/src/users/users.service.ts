@@ -1,10 +1,13 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CrudService } from "src/common/interfaces/crud-service.interface";
+import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { PaginationResult } from "src/common/interfaces/pagination-result.interface";
 import { Repository } from "typeorm";
 import { UsersCreateDto } from "./dtos/users-create.dto";
@@ -15,10 +18,17 @@ import { User } from "./users.entity";
 
 @Injectable()
 export class UsersService implements CrudService<User> {
+  private readonly superAdminEmail: string;
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
-  ) {}
+    private readonly usersRepository: Repository<User>,
+    private readonly configService: ConfigService<EnvironmentVariables, true>
+  ) {
+    this.superAdminEmail = this.configService.get<string>(
+      "SEEDER_SUPER_ADMIN_EMAIL",
+      { infer: true }
+    );
+  }
 
   findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({
@@ -116,7 +126,12 @@ export class UsersService implements CrudService<User> {
   }
 
   async delete(id: string): Promise<void> {
-    await this.findByIdOrThrow(id);
+    const user = await this.findByIdOrThrow(id);
+    const superAdminEmail = await this.findByEmail(this.superAdminEmail);
+
+    if (user.id === superAdminEmail?.id) {
+      throw new ForbiddenException();
+    }
     await this.usersRepository.softDelete({ id });
   }
 }

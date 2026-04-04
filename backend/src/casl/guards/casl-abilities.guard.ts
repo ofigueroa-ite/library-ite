@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { IS_PUBLIC } from "src/auth/decorators/public.decorator";
 import { CaslAbilityFactory } from "../casl-ability.factory";
 import { CHECK_ABILITIES_KEY } from "../decorators/casl-check-abilites.decorator";
 import { CaslAbilityHandler } from "../interfaces/casl-ability-handler.interface";
@@ -13,6 +14,15 @@ export class CaslAbilitiesGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
+    const isPublic = this.reflector.getAllAndOverride(IS_PUBLIC, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
     const abilityHandlers =
       this.reflector.get<CaslAbilityHandler[]>(
         CHECK_ABILITIES_KEY,
