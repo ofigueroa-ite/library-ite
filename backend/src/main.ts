@@ -6,7 +6,9 @@ import {
   ValidationPipe,
   VersioningType,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { EnvironmentVariables } from "./common/interfaces/environment-variables.interface";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +24,12 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: "1",
+  });
+
+  const configService = app.get(ConfigService<EnvironmentVariables, true>);
+  const allowedOrigins = configService.get<string[]>("APP_CORS_ORIGINS");
+  app.enableCors({
+    origin: allowedOrigins,
   });
 
   const config = new DocumentBuilder()

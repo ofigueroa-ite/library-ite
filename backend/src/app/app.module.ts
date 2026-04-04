@@ -24,6 +24,23 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
         APP_VERSION: Joi.string()
           .pattern(/^\d+\.\d+\.\d+$/)
           .required(),
+        APP_CORS_ORIGINS: Joi.string()
+          .custom((value: string, helpers) => {
+            const urls = value.split(",").map((url) => url.trim());
+            const urlSchema = Joi.string().uri();
+
+            for (const url of urls) {
+              const { error } = urlSchema.validate(url);
+              if (error) {
+                return helpers.error(
+                  "APP_CORS_ORIGINS must be a comma separated URL list"
+                );
+              }
+            }
+
+            return urls;
+          })
+          .required(),
         AUTH_JWT_EXPIRES_IN: Joi.number().integer().required(),
         MAILER_SMTP_HOST: Joi.string().required(),
         MAILER_SMTP_PORT: Joi.number().integer().required(),
