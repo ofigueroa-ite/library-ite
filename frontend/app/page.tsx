@@ -1,3 +1,5 @@
+import { Button } from "@mantine/core";
+
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>;
+  return <Button>Hello World!</Button>;
 }
