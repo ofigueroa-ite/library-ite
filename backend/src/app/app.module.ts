@@ -1,9 +1,12 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Joi from "joi";
 import { AuthModule } from "src/auth/auth.module";
+import { AuthJwtGuard } from "src/auth/guards/auth-jwt.guard";
 import { CaslModule } from "src/casl/casl.module";
+import { CaslAbilitiesGuard } from "src/casl/guards/casl-abilities.guard";
 import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
@@ -57,6 +60,10 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     AuthModule,
     CaslModule,
     SeederModule,
+  ],
+  providers: [
+    { provide: APP_GUARD, useClass: AuthJwtGuard },
+    { provide: APP_GUARD, useClass: CaslAbilitiesGuard },
   ],
 })
 export class AppModule {}

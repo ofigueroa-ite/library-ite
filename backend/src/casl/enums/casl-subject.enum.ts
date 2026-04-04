@@ -4,4 +4,5 @@ export enum CaslSubject {
   PERMISSIONS = "permissions",
   ROLES = "roles",
   USERS = "users",
+  USERS_ROLES = "users_roles",
 }
