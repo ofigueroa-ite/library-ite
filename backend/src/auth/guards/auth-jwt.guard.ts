@@ -29,11 +29,11 @@ export class AuthJwtGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
-      throw new UnauthorizedException();
-    }
-    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    const token =
+      request.cookies?.token ||
+      (request.headers.authorization?.startsWith("Bearer ")
+        ? request.headers.authorization.slice(7)
+        : null);
 
     if (!token) {
       throw new UnauthorizedException();

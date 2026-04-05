@@ -8,6 +8,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import cookieParser from "cookie-parser";
 import { EnvironmentVariables } from "./common/interfaces/environment-variables.interface";
 
 async function bootstrap() {
@@ -30,7 +31,10 @@ async function bootstrap() {
   const allowedOrigins = configService.get<string[]>("APP_CORS_ORIGINS");
   app.enableCors({
     origin: allowedOrigins,
+    credentials: true,
   });
+
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle("Library ITE API")

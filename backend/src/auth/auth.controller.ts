@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import type { Response } from "express";
+import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { User } from "src/users/users.entity";
 import { AuthService } from "./auth.service";
 import { AuthUser } from "./decorators/auth-user.decorator";
@@ -10,7 +13,13 @@ import { AuthJwtGuard } from "./guards/auth-jwt.guard";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private readonly otpTtl: number;
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService<EnvironmentVariables, true>
+  ) {
+    this.otpTtl = this.configService.get("OTP_TTL_MINUTES");
+  }
 
   @Public()
   @Post("login")
@@ -20,8 +29,19 @@ export class AuthController {
 
   @Public()
   @Post("verify")
-  verify(@Body() dto: AuthVerifyDto): Promise<{ accessToken: string }> {
-    return this.authService.verify(dto);
+  async verify(
+    @Body() dto: AuthVerifyDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<{ accessToken: string }> {
+    const { accessToken } = await this.authService.verify(dto);
+
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: this.otpTtl * 1000,
+    });
+
+    return { accessToken };
   }
 
   @ApiBearerAuth()
