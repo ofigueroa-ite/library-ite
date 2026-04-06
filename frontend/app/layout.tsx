@@ -1,15 +1,9 @@
 import "@mantine/core/styles.css";
+import "./globals.css";
+import "@fontsource-variable/noto-sans/wght.css";
 
-import {
-  ColorSchemeScript,
-  MantineProvider,
-  mantineHtmlProps,
-} from "@mantine/core";
-
-export const metadata = {
-  title: "Biblioteca ITE",
-  desription: "Sistema de la biblioteca del ITE",
-};
+import { mantineHtmlProps } from "@mantine/core";
+import Providers from "./providers";
 
 export default function RootLayout({
   children,
@@ -18,11 +12,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-      </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

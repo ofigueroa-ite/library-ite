@@ -13,16 +13,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fontsource-variable/noto-sans": "^5.2.10",
     "@mantine/charts": "^9.0.0",
     "@mantine/core": "^9.0.0",
     "@mantine/form": "^9.0.0",
     "@mantine/hooks": "^9.0.0",
     "@mantine/modals": "^9.0.0",
     "@mantine/notifications": "^9.0.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tabler/icons-react": "^3.41.1",
+    "@tailwindcss/postcss": "^4.2.2",
     "next": "^16.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "recharts": "^3.8.1"
+    "react-redux": "^9.2.0",
+    "recharts": "^3.8.1",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "postcss": "^8.4.31",

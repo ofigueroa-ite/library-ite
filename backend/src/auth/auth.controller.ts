@@ -4,6 +4,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import type { Response } from "express";
 import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { User } from "src/users/users.entity";
+import { UsersService } from "src/users/users.service";
 import { AuthService } from "./auth.service";
 import { AuthUser } from "./decorators/auth-user.decorator";
 import { Public } from "./decorators/public.decorator";
@@ -13,12 +14,13 @@ import { AuthJwtGuard } from "./guards/auth-jwt.guard";
 
 @Controller("auth")
 export class AuthController {
-  private readonly otpTtl: number;
+  private readonly authJwtExpiresIn: number;
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService<EnvironmentVariables, true>
+    private readonly configService: ConfigService<EnvironmentVariables, true>,
+    private readonly usersService: UsersService
   ) {
-    this.otpTtl = this.configService.get("OTP_TTL_MINUTES");
+    this.authJwtExpiresIn = this.configService.get("AUTH_JWT_EXPIRES_IN");
   }
 
   @Public()
@@ -38,7 +40,7 @@ export class AuthController {
     res.cookie("token", accessToken, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: this.otpTtl * 1000,
+      maxAge: this.authJwtExpiresIn * 1000,
     });
 
     return { accessToken };
@@ -49,5 +51,16 @@ export class AuthController {
   @Get("me")
   me(@AuthUser() user: User): User {
     return user;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthJwtGuard)
+  @Post("logout")
+  async logout(
+    @AuthUser() user: User,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<void> {
+    await this.usersService.rotateJwtSecret(user.id);
+    res.clearCookie("token");
   }
 }

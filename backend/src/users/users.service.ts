@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import {
   ConflictException,
   ForbiddenException,
@@ -133,5 +134,12 @@ export class UsersService implements CrudService<User> {
       throw new ForbiddenException();
     }
     await this.usersRepository.softDelete({ id });
+  }
+
+  async rotateJwtSecret(id: string): Promise<void> {
+    await this.findByIdOrThrow(id);
+    await this.usersRepository.update(id, {
+      jwtSecret: crypto.randomBytes(32).toString("hex"),
+    });
   }
 }
