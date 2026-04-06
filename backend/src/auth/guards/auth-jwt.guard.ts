@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
+import { Response } from "express";
 import { UsersService } from "src/users/users.service";
 import { IS_PUBLIC } from "../decorators/public.decorator";
 import { AuthJwtPayload } from "../interfaces/auth-jwt-payload.interface";
@@ -29,6 +30,8 @@ export class AuthJwtGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse<Response>();
+
     const token =
       request.cookies?.token ||
       (request.headers.authorization?.startsWith("Bearer ")
@@ -36,26 +39,31 @@ export class AuthJwtGuard implements CanActivate {
         : null);
 
     if (!token) {
-      throw new UnauthorizedException();
+      this.clearCookieAndThrow(response);
     }
 
     const decodedToken = this.jwtService.decode(token) as AuthJwtPayload;
     if (!decodedToken) {
-      throw new UnauthorizedException();
+      this.clearCookieAndThrow(response);
     }
 
-    const user = await this.usersService.findByIdOrThrow(decodedToken.sub);
+    const user = await this.usersService.findById(decodedToken.sub);
     if (!user) {
-      throw new UnauthorizedException();
+      this.clearCookieAndThrow(response);
     }
 
     try {
       this.jwtService.verify(token, { secret: user.jwtSecret });
     } catch {
-      throw new UnauthorizedException();
+      this.clearCookieAndThrow(response);
     }
 
     request.user = user;
     return true;
+  }
+
+  private clearCookieAndThrow(response: Response): never {
+    response.clearCookie("token");
+    throw new UnauthorizedException();
   }
 }
