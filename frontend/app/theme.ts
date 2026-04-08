@@ -33,7 +33,7 @@ export const theme = createTheme({
     iteGray,
   },
   primaryColor: "iteBlue",
-  primaryShade: 8,
+  primaryShade: 9,
   black: iteGray[9],
   defaultRadius: "xs",
 });
