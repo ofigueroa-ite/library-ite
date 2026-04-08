@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@casl/ability": "^6.8.0",
+    "@casl/react": "^5.0.1",
     "@fontsource-variable/noto-sans": "^5.2.10",
     "@mantine/charts": "^9.0.0",
     "@mantine/core": "^9.0.0",
