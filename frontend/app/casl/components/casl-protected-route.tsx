@@ -29,7 +29,7 @@ export default function CaslProtectedRoute({
   }
 
   if (caslAbility?.can(action, subject)) {
-    return <div className="bg-sky-500">{children}</div>;
+    return children;
   }
 
   forbidden();

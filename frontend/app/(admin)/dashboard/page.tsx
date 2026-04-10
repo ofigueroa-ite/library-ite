@@ -7,7 +7,7 @@ import { CaslSubject } from "../../casl/interfaces/casl-subject.enum";
 export default function DashboardPage() {
   return (
     <CaslProtectedRoute action={CaslAction.READ} subject={CaslSubject.ALL}>
-      <h1>Dashboard</h1>;
+      <h1>Dashboard</h1>
     </CaslProtectedRoute>
   );
 }

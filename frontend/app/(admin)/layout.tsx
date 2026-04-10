@@ -86,12 +86,6 @@ export default function AdminLayout({
         <AppShell.Header>
           <div className="flex h-full items-center justify-between">
             <Burger hiddenFrom="sm" onClick={toggle} opened={opened} />
-            <img
-              alt="Logo TecNM horizontal"
-              height="auto"
-              src="/assets/img/logo-tecnm-horizontal.png"
-              width="200"
-            />
             <Menu>
               <Menu.Target>
                 <Button size="md" variant="transparent">
@@ -159,8 +153,8 @@ export default function AdminLayout({
           </div>
           <Divider className="m-5" color="white" size="sm" />
         </AppShell.Navbar>
-        <AppShell.Main className="bg-green-500">
-          <div className="h-full bg-dark-300">{children}</div>
+        <AppShell.Main className="flex flex-col">
+          <div className="p-5">{children}</div>
         </AppShell.Main>
       </AppShell>
     </CaslAbilityContext.Provider>
