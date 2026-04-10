@@ -36,4 +36,28 @@ export const theme = createTheme({
   primaryShade: 9,
   black: iteGray[9],
   defaultRadius: "xs",
+
+  components: {
+    Badge: {
+      defaultProps: {
+        variant: "light",
+      },
+    },
+    ActionIcon: {
+      defaultProps: {
+        variant: "subtle",
+        radius: "xl",
+      },
+    },
+    TextInput: {
+      defaultProps: {
+        variant: "filled",
+      },
+    },
+    Select: {
+      defaultProps: {
+        variant: "filled",
+      },
+    },
+  },
 });
