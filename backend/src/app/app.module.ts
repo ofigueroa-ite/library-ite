@@ -20,7 +20,6 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        APP_DATABASE_URL: Joi.string().required(),
         APP_VERSION: Joi.string()
           .pattern(/^\d+\.\d+\.\d+$/)
           .required(),
@@ -41,6 +40,11 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
             return urls;
           })
           .required(),
+        DATABASE_URL: Joi.string().required(),
+        DATABASE_PORT: Joi.number().integer().required(),
+        DATABASE_NAME: Joi.string().required(),
+        DATABASE_USERNAME: Joi.string().required(),
+        DATABASE_PASSWORD: Joi.string().required(),
         AUTH_JWT_EXPIRES_IN: Joi.number().integer().required(),
         MAILER_SMTP_HOST: Joi.string().required(),
         MAILER_SMTP_PORT: Joi.number().integer().required(),
@@ -63,8 +67,12 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
       useFactory: (
         configService: ConfigService<EnvironmentVariables, true>
       ) => ({
-        type: "better-sqlite3",
-        database: configService.get("APP_DATABASE_URL", { infer: true }),
+        type: "postgres",
+        host: configService.get("DATABASE_URL", { infer: true }),
+        port: configService.get("DATABASE_PORT", { infer: true }),
+        database: configService.get("DATABASE_NAME", { infer: true }),
+        username: configService.get("DATABASE_USERNAME", { infer: true }),
+        password: configService.get("DATABASE_PASSWORD", { infer: true }),
         autoLoadEntities: true,
         synchronize: false,
       }),

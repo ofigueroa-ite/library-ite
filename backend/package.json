@@ -12,7 +12,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "typeorm": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./../node_modules/typeorm/cli.js -d src/migration-data-source.ts",
-    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:create": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./../node_modules/typeorm/cli.js migration:create",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
     "email:dev": "email dev --dir='./src/mailer/templates'"
@@ -38,6 +38,7 @@
     "joi": "^18.0.2",
     "nanoid": "^5.1.7",
     "nodemailer": "^8.0.4",
+    "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "reflect-metadata": "^0.2.2",

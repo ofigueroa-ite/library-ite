@@ -1,8 +1,7 @@
 /**/*/dist
 node_modules
 /**/*/node_modules
-/build
-/**/*/.next
+/**/*/build
+/**/*/.react-router
 .vscode/*
 .env
-*.db

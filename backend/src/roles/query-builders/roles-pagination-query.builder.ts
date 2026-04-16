@@ -4,12 +4,17 @@ import { Role } from "../roles.entity";
 
 export class RolesPaginationQueryBuilder extends PaginationQueryBuilder<Role> {
   constructor(repository: Repository<Role>) {
-    super(repository.createQueryBuilder("role"));
+    super(
+      repository
+        .createQueryBuilder("role")
+        .leftJoinAndSelect("role.permissions", "permission")
+        .leftJoinAndSelect("role.users", "user")
+    );
   }
 
   withSearch(search?: string): this {
     if (search) {
-      this.queryBuilder.where(`${this.alias}.name ILIKE :search`, {
+      this.queryBuilder.andWhere(`${this.alias}.name ILIKE :search`, {
         search: `%${search}%`,
       });
     }

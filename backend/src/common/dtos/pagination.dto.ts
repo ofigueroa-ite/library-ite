@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsDateString, IsOptional, IsPositive } from "class-validator";
 
 export class PaginationDto {
@@ -32,7 +32,6 @@ export class PaginationDto {
   @IsPositive()
   limit: number = 10;
 
-  get skip(): number {
-    return (this.page - 1) * this.limit;
-  }
+  @Transform(({ obj }) => (obj.page - 1) * obj.limit)
+  skip: number;
 }

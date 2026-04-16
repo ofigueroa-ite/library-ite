@@ -49,6 +49,21 @@ export class RolesService implements CrudService<Role> {
     });
   }
 
+  findByPriority(priority: number): Promise<Role | null> {
+    return this.rolesRepository.findOne({
+      where: { priority },
+      relations: ["permissions"],
+    });
+  }
+
+  async findByPriorityOrThrow(priority: number): Promise<Role> {
+    const role = await this.findByPriority(priority);
+    if (!role) {
+      throw new NotFoundException();
+    }
+    return role;
+  }
+
   findSuperAdminRole(): Promise<Role | null> {
     return this.findByName(this.superAdminRoleName);
   }
@@ -108,8 +123,16 @@ export class RolesService implements CrudService<Role> {
     }
   }
 
+  async throwIfRolePriorityExists(priority: number): Promise<void> {
+    const role = await this.rolesRepository.findOneBy({ priority });
+    if (role) {
+      throw new ConflictException();
+    }
+  }
+
   async create(dto: RolesCreateDto): Promise<Role> {
     await this.throwIfRoleNameExists(dto.name);
+    await this.throwIfRolePriorityExists(dto.priority);
     const role = this.rolesRepository.create(dto);
     return this.rolesRepository.save(role);
   }

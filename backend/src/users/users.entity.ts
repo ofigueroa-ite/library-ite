@@ -25,11 +25,14 @@ export class User extends BaseEntity {
   @Column({
     name: "jwt_secret",
     nullable: false,
-    default: () => "lower(hex(randomblob(32)))",
+    default: () => "encode(gen_random_bytes(32), 'hex')",
   })
   jwtSecret: string;
 
-  @ManyToMany(() => Role)
+  @ManyToMany(
+    () => Role,
+    (role) => role.users
+  )
   @JoinTable({
     name: "users_roles",
     joinColumn: {
