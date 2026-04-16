@@ -7,10 +7,20 @@ import { BaseEntity } from "../common/entities/base.entity";
 @Entity("permissions")
 @Unique(["action", "subject", "roleId"])
 export class Permission extends BaseEntity {
-  @Column({ type: "simple-enum", enum: CaslAction, nullable: false })
+  @Column({
+    type: "enum",
+    enum: CaslAction,
+    nullable: false,
+    enumName: "casl_action",
+  })
   action: CaslAction;
 
-  @Column({ type: "simple-enum", enum: CaslSubject, nullable: false })
+  @Column({
+    type: "enum",
+    enum: CaslSubject,
+    nullable: false,
+    enumName: "casl_subject",
+  })
   subject: CaslSubject;
 
   @Column({ type: "simple-json", nullable: true })
@@ -32,7 +42,7 @@ export class Permission extends BaseEntity {
   @ManyToOne(
     () => Role,
     (role) => role.permissions,
-    { onDelete: "CASCADE" }
+    { onDelete: "RESTRICT" }
   )
   @JoinColumn({
     name: "role_id",

@@ -1,7 +1,7 @@
 import { BaseEntity } from "src/common/entities/base.entity";
 import { Role } from "src/roles/roles.entity";
 import { User } from "src/users/users.entity";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity("users_roles")
 export class UsersRoles extends BaseEntity {
@@ -11,11 +11,11 @@ export class UsersRoles extends BaseEntity {
   @Column({ name: "role_id", nullable: false, type: "uuid" })
   roleId: string;
 
-  @ManyToMany(() => User, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, { onDelete: "RESTRICT" })
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @ManyToOne(() => Role, { onDelete: "CASCADE" })
+  @ManyToOne(() => Role, { onDelete: "RESTRICT" })
   @JoinColumn({ name: "role_id" })
   role: Role;
 }

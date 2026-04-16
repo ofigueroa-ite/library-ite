@@ -24,6 +24,15 @@
           }
         }
       }
+    },
+    {
+      "includes": ["./frontend/.react-router/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
     }
   ]
 }

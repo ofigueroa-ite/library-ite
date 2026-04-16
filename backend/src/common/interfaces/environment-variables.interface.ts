@@ -1,8 +1,12 @@
 export interface EnvironmentVariables {
   APP_CORS_ORIGINS: string[];
-  APP_DATABASE_URL: string;
   APP_VERSION: string;
   AUTH_JWT_EXPIRES_IN: number;
+  DATABASE_NAME: string;
+  DATABASE_PASSWORD: string;
+  DATABASE_PORT: number;
+  DATABASE_URL: string;
+  DATABASE_USERNAME: string;
   MAILER_FROM: string;
   MAILER_SMTP_HOST: string;
   MAILER_SMTP_PASSWORD: string;
