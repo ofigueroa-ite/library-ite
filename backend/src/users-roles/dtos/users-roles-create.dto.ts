@@ -1,8 +1,10 @@
-import { IsUUID } from "class-validator";
+import { IsArray, IsUUID } from "class-validator";
 
 export class UsersRolesCreateDto {
   @IsUUID()
   userId: string;
-  @IsUUID()
-  roleId: string;
+
+  @IsArray()
+  @IsUUID("4", { each: true })
+  roleIds: string[];
 }

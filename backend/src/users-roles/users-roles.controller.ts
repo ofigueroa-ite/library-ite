@@ -47,7 +47,7 @@ export class UsersRolesController {
     ability.can(CaslAction.CREATE, CaslSubject.USERS_ROLES)
   )
   @Post()
-  create(@Body() dto: UsersRolesCreateDto): Promise<UsersRoles> {
+  create(@Body() dto: UsersRolesCreateDto): Promise<UsersRoles[]> {
     return this.usersRolesService.create(dto);
   }
 

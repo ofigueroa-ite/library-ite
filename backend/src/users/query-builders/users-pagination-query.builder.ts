@@ -4,7 +4,11 @@ import { User } from "../users.entity";
 
 export class UsersPaginationQueryBuilder extends PaginationQueryBuilder<User> {
   constructor(repository: Repository<User>) {
-    super(repository.createQueryBuilder("user"));
+    super(
+      repository
+        .createQueryBuilder("user")
+        .leftJoinAndSelect("user.roles", "role")
+    );
   }
 
   withSearch(search?: string): this {

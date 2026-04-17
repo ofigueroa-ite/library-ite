@@ -21,11 +21,12 @@ export function NavbarButton({
 
   return (
     <NavLink
-      active={location.pathname.startsWith(route)}
+      active={location.pathname === route}
       c="white"
       classNames={NavbarButtonClasses}
       disabled={ability?.cannot(CaslAction.READ, caslSubject)}
       onClick={() => navigate(route)}
+      opened={location.pathname.startsWith(route)}
       {...props}
     />
   );

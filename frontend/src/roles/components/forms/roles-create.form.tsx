@@ -1,13 +1,13 @@
 import { NumberInput, TextInput } from "@mantine/core";
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { Form } from "../../../common/components/form";
+import { Form, type FormProps } from "../../../common/components/form";
 import type { Role } from "../../interfaces/role.interface";
 import { useCreateRoleMutation } from "../../roles.api";
 import { rolesCreateSchema } from "../../schemas/roles-create.schema";
 
 interface RolesCreateFormProps
-  extends Omit<React.HTMLAttributes<HTMLFormElement>, "onError"> {
+  extends Omit<FormProps<Role>, "onError" | "onSuccess"> {
   onError?: (error: FetchBaseQueryError | SerializedError) => void;
   onSuccess?: (data: Role) => void;
 }
@@ -30,14 +30,9 @@ export function RolesCreateForm({
   };
 
   return (
-    <Form
-      {...props}
-      initialValues={{ name: "", priority: 0 }}
-      onSubmit={handleSubmit}
-      schema={rolesCreateSchema}
-    >
+    <Form<Role> {...props} onSubmit={handleSubmit} schema={rolesCreateSchema}>
       {(form) => (
-        <div className="flex flex-col gap-3">
+        <>
           <TextInput label="Nombre" {...form.getInputProps("name")} />
           <NumberInput
             allowDecimal={false}
@@ -45,7 +40,7 @@ export function RolesCreateForm({
             trimLeadingZeroesOnBlur
             {...form.getInputProps("priority")}
           />
-        </div>
+        </>
       )}
     </Form>
   );

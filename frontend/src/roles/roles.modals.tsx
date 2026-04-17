@@ -7,21 +7,11 @@ import { RolesUpdateForm } from "./components/forms/roles-update.form";
 import type { Role } from "./interfaces/role.interface";
 
 export const openCreateRoleModal = () => {
-  const formId = crypto.randomUUID();
-  modals.openConfirmModal({
+  modals.open({
     title: "Nuevo rol",
-    labels: {
-      confirm: "Crear",
-      cancel: "Cancelar",
-    },
-    closeOnConfirm: false,
-    confirmProps: {
-      form: formId,
-      type: "submit",
-    },
     children: (
       <RolesCreateForm
-        id={formId}
+        onCancel={() => modals.closeAll()}
         onError={(e) => {
           if (isHttpError(e)) {
             if (e.status === 409) {
@@ -51,22 +41,12 @@ export const openCreateRoleModal = () => {
 };
 
 export const openUpdateRoleModal = (roleId: string, data: Partial<Role>) => {
-  const formId = crypto.randomUUID();
-  modals.openConfirmModal({
+  modals.open({
     title: "Editar rol",
-    labels: {
-      confirm: "Guardar",
-      cancel: "Cancelar",
-    },
-    closeOnConfirm: false,
-    confirmProps: {
-      form: formId,
-      type: "submit",
-    },
     children: (
       <RolesUpdateForm
         data={data}
-        id={formId}
+        onCancel={() => modals.closeAll()}
         onSuccess={() => {
           notifications.show({
             color: "green",
@@ -81,22 +61,11 @@ export const openUpdateRoleModal = (roleId: string, data: Partial<Role>) => {
 };
 
 export const openDeleteRoleModal = (roleId: string) => {
-  const formId = crypto.randomUUID();
-  modals.openConfirmModal({
+  modals.open({
     title: "Eliminar rol",
-    labels: {
-      confirm: "Eliminar",
-      cancel: "Cancelar",
-    },
-    closeOnConfirm: false,
-    confirmProps: {
-      form: formId,
-      type: "submit",
-      color: "red",
-    },
     children: (
       <RolesDeleteForm
-        id={formId}
+        onCancel={() => modals.closeAll()}
         onSuccess={() => {
           notifications.show({
             color: "green",

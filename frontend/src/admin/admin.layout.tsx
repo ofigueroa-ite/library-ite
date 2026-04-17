@@ -69,13 +69,14 @@ export default function AdminLayout() {
               label="Usuarios"
               leftSection={<IconUsers />}
               route="/users"
-            />
-            <NavbarButton
-              caslSubject={CaslSubject.ROLES}
-              label="Roles"
-              leftSection={<IconUserShield />}
-              route="/roles"
-            />
+            >
+              <NavbarButton
+                caslSubject={CaslSubject.ROLES}
+                label="Roles"
+                leftSection={<IconUserShield />}
+                route="/users/roles"
+              />
+            </NavbarButton>
           </div>
           <Divider className="m-5" color="white" size="sm" />
         </AppShell.Navbar>
