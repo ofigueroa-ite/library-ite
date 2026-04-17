@@ -1,13 +1,12 @@
 import { NumberInput, TextInput } from "@mantine/core";
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { Form } from "../../../common/components/form";
+import { Form, type FormProps } from "../../../common/components/form";
 import type { Role } from "../../interfaces/role.interface";
 import { useUpdateRoleMutation } from "../../roles.api";
 import { rolesUpdateSchema } from "../../schemas/roles-update.schema";
 
-interface RolesUpdateFormProps
-  extends Omit<React.HTMLAttributes<HTMLFormElement>, "onError"> {
+interface RolesUpdateFormProps extends Omit<FormProps<Role>, "onError"> {
   data: Partial<Role>;
   onError?: (error: FetchBaseQueryError | SerializedError) => void;
   onSuccess?: (data: Role) => void;
@@ -36,12 +35,12 @@ export function RolesUpdateForm({
   return (
     <Form
       {...props}
-      initialValues={data ?? { name: "", priority: 0 }}
+      initialValues={data}
       onSubmit={handleSubmit}
       schema={rolesUpdateSchema}
     >
       {(form) => (
-        <div className="flex flex-col gap-3">
+        <>
           <TextInput label="Nombre" {...form.getInputProps("name")} />
           <NumberInput
             allowDecimal={false}
@@ -49,7 +48,7 @@ export function RolesUpdateForm({
             trimLeadingZeroesOnBlur
             {...form.getInputProps("priority")}
           />
-        </div>
+        </>
       )}
     </Form>
   );

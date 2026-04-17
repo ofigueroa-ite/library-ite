@@ -1,11 +1,11 @@
 import { Text } from "@mantine/core";
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { Form } from "../../../common/components/form";
+import type { Role } from "~/roles/interfaces/role.interface";
+import { Form, type FormProps } from "../../../common/components/form";
 import { useDeleteRoleMutation } from "../../roles.api";
 
-interface RolesDeleteFormProps
-  extends Omit<React.HTMLAttributes<HTMLFormElement>, "onError"> {
+interface RolesDeleteFormProps extends Omit<FormProps<Role>, "onError"> {
   onError?: (error: FetchBaseQueryError | SerializedError) => void;
   onSuccess?: () => void;
   roleId: string;

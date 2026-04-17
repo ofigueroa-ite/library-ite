@@ -59,7 +59,7 @@ export class SeederService implements OnApplicationBootstrap {
     if (!superAdminUser.roles?.some((role) => role.id === superAdminRole.id)) {
       await this.usersRolesService.create({
         userId: superAdminUser.id,
-        roleId: superAdminRole.id,
+        roleIds: [superAdminRole.id],
       });
     }
   }

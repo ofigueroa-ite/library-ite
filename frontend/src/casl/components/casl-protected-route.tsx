@@ -1,5 +1,5 @@
 import { Loader, Text } from "@mantine/core";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import { useMeQuery } from "../../auth/auth.api";
 import { useCaslAbility } from "../casl-ability-context";
 import { CaslAction } from "../interfaces/casl-action.enum";
@@ -16,7 +16,6 @@ export default function CaslProtectedRoute({
   subject,
   children,
 }: CaslProtectedRouteProps) {
-  const navigate = useNavigate();
   const { isLoading } = useMeQuery();
   const caslAbility = useCaslAbility();
 
@@ -33,5 +32,5 @@ export default function CaslProtectedRoute({
     return children;
   }
 
-  navigate("/");
+  return <Navigate replace to="/" />;
 }

@@ -1,6 +1,6 @@
 export interface Resource {
-  createdAt: Date;
-  deletedAt: Date | null;
+  createdAt: string;
+  deletedAt: string | null;
   id: string;
-  updatedAt: Date;
+  updatedAt: string;
 }

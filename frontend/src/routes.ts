@@ -4,7 +4,7 @@ export default [
   layout("admin/admin.layout.tsx", [
     route("dashboard", "./dashboard/dashboard.page.tsx"),
     route("users", "./users/users.page.tsx"),
-    route("roles", "./roles/roles.page.tsx"),
+    route("users/roles", "./roles/roles.page.tsx"),
   ]),
   route("sign-in", "./auth/sign-in.page.tsx"),
 ] satisfies RouteConfig;

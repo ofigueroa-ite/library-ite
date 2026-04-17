@@ -1,5 +1,3 @@
-"use client";
-
 import CaslProtectedRoute from "../casl/components/casl-protected-route";
 import { CaslAction } from "../casl/interfaces/casl-action.enum";
 import { CaslSubject } from "../casl/interfaces/casl-subject.enum";

@@ -4,3 +4,10 @@
     background: rgba(255, 255, 255, 0.25);
   }
 }
+
+.children {
+  padding: 0px;
+  & .root {
+    padding-left: 20px;
+  }
+}

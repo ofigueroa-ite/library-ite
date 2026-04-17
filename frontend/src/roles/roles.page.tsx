@@ -60,7 +60,7 @@ export default function RolesPage() {
           {roles?.data.map((role) => (
             <Accordion.Item key={role.id} value={role.id}>
               <div className="mr-3 flex items-center gap-3">
-                <Accordion.Control>
+                <Accordion.Control color="iteGray">
                   <div className="flex gap-3">
                     <Text>{role.name}</Text>
                     <Text>({`${role.priority}`})</Text>

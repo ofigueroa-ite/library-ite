@@ -1,41 +1,58 @@
+import { Button } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { useForm } from "@mantine/form";
 import Joi from "joi";
 
-export interface FormProps<T>
+export interface FormProps<T extends object>
   extends Omit<React.HTMLAttributes<HTMLFormElement>, "children" | "onSubmit"> {
   children?: (form: UseFormReturnType<T>) => React.ReactNode;
-  initialValues?: T;
-  onSubmit: (values: T) => void;
+  initialValues?: Partial<T>;
+  onCancel?: () => void;
+  onSubmit?: (values: T) => void;
   schema?: Joi.ObjectSchema<T>;
 }
 
-export function Form<T>({
+export function Form<T extends object>({
   onSubmit,
+  onCancel,
   initialValues,
   children,
   schema,
   ...props
 }: FormProps<T>) {
   const form = useForm<T>({
-    initialValues,
+    initialValues: initialValues as T,
     validate: (values) => {
       const result = schema?.validate(values);
-      console.log(result);
-      return result?.error?.details?.reduce<Record<string, string>>(
-        (acc, detail) => {
-          const key = detail.path.join(".");
-          acc[key] = detail.message;
-          return acc;
-        },
-        {}
+      return (
+        result?.error?.details?.reduce<Record<string, string>>(
+          (acc, detail) => {
+            const key = detail.path.join(".");
+            acc[key] = detail.message;
+            return acc;
+          },
+          {}
+        ) ?? {}
       );
     },
   });
 
   return (
-    <form onSubmit={form.onSubmit(onSubmit)} {...props}>
-      {children ? children(form) : null}
+    <form
+      onSubmit={form.onSubmit(() => {
+        onSubmit?.(form.values);
+      })}
+      {...props}
+    >
+      <div className="flex flex-col gap-3">
+        {children ? children(form) : null}
+        <div className="flex justify-end gap-3">
+          <Button color="iteGray" onClick={onCancel} variant="white">
+            Cancelar
+          </Button>
+          <Button type="submit">Aceptar</Button>
+        </div>
+      </div>
     </form>
   );
 }

@@ -74,6 +74,17 @@ export const theme = createTheme({
       defaultProps: {
         striped: true,
         withRowBorders: false,
+        stripedColor: "iteGray.0",
+      },
+    },
+    NumberInput: {
+      defaultProps: {
+        variant: "filled",
+      },
+    },
+    MultiSelect: {
+      defaultProps: {
+        variant: "filled",
       },
     },
   },
