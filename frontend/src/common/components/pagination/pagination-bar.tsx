@@ -28,7 +28,7 @@ export function PaginationBar(props: PaginationBarProps) {
         params.delete(key);
       }
 
-      navigate(`${location.pathname}?${params.toString()}`);
+      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
     },
     400
   );

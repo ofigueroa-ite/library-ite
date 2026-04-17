@@ -1,9 +1,9 @@
+import { api } from "../api";
 import type {
   PaginationDto,
   PaginationResult,
   PaginationSortOrder,
-} from "~/common/interfaces";
-import { api } from "../api";
+} from "./../common/interfaces/pagination";
 import type { Role } from "./interfaces/role.interface";
 
 export enum RolesPaginationSortByDto {
