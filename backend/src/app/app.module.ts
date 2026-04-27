@@ -9,6 +9,7 @@ import { CaslModule } from "src/casl/casl.module";
 import { CaslAbilitiesGuard } from "src/casl/guards/casl-abilities.guard";
 import { EnvironmentVariables } from "src/common/interfaces/environment-variables.interface";
 import { DegreesModule } from "src/degrees/degrees.module";
+import { DepartmentsModule } from "src/departments/departments.module";
 import { GendersModule } from "src/genders/genders.module";
 import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
@@ -89,6 +90,7 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     SeederModule,
     GendersModule,
     DegreesModule,
+    DepartmentsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthJwtGuard },
