@@ -1,11 +1,13 @@
 import { AppShell, Burger, Divider, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconHome,
   IconLayoutDashboard,
   IconUserShield,
   IconUsers,
 } from "@tabler/icons-react";
 import { Outlet } from "react-router";
+import { CaslAction } from "~/casl/interfaces/casl-action.enum";
 import { useMeQuery } from "../auth/auth.api";
 import { defineAbilityFor } from "../casl/ability";
 import { CaslAbilityContext } from "../casl/casl-ability-context";
@@ -58,32 +60,32 @@ export default function AdminLayout() {
           </div>
           <Divider className="m-5" color="white" size="sm" />
           <div>
+            <NavbarButton label="Inicio" leftSection={<IconHome />} route="/" />
             <NavbarButton
-              caslSubject={CaslSubject.ALL}
               label="Panel"
               leftSection={<IconLayoutDashboard />}
               route="/dashboard"
             />
-            <NavbarButton
-              caslSubject={CaslSubject.USERS}
-              label="Usuarios"
-              leftSection={<IconUsers />}
-              route="/users"
-            >
+            {caslAbility.can(CaslAction.READ, CaslSubject.USERS) && (
               <NavbarButton
-                caslSubject={CaslSubject.ROLES}
-                label="Roles"
-                leftSection={<IconUserShield />}
-                route="/users/roles"
-              />
-            </NavbarButton>
+                label="Usuarios"
+                leftSection={<IconUsers />}
+                route="/users"
+              >
+                {caslAbility.can(CaslAction.READ, CaslSubject.USERS) && (
+                  <NavbarButton
+                    label="Roles"
+                    leftSection={<IconUserShield />}
+                    route="/users/roles"
+                  />
+                )}
+              </NavbarButton>
+            )}
           </div>
           <Divider className="m-5" color="white" size="sm" />
         </AppShell.Navbar>
         <AppShell.Main className="flex flex-col">
-          <div className="p-5">
-            <Outlet />
-          </div>
+          <div className="p-5">{data && <Outlet />}</div>
         </AppShell.Main>
       </AppShell>
     </CaslAbilityContext.Provider>

@@ -10,11 +10,12 @@ const baseQuery = fetchBaseQuery({
 export const baseQueryWithAuthRedirect: BaseQueryFn<
   string | FetchArgs,
   unknown,
-  FetchBaseQueryError
+  FetchBaseQueryError,
+  { skipAuthRedirect?: boolean }
 > = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401) {
+  if (result.error?.status === 401 && !extraOptions.skipAuthRedirect) {
     window.location.href = "/sign-in";
   }
 
