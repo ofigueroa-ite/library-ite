@@ -30,42 +30,48 @@ export default function DegreesPage() {
   });
 
   return (
-    <CaslProtectedRoute action={CaslAction.READ} subject={CaslSubject.DEGREES}>
-      <div className="flex flex-col gap-3">
-        <Title>Grados</Title>
-        <div className="flex justify-end">
-          <Button onClick={openCreateDegreeModal}>Nuevo</Button>
-        </div>
-        <PaginationBar
-          currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
-          sortByOptions={[{ label: "Nombre", value: "name" }]}
-          totalPages={degrees?.meta?.totalPages ?? 0}
-        />
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Nombre</Table.Th>
-              <Table.Th />
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {degrees?.data?.map((degree) => (
-              <Table.Tr key={degree.id}>
-                <Table.Td>{degree.name}</Table.Td>
-                <Table.Td>
-                  <ActionIcon
-                    onClick={() =>
-                      openUpdateDegreeModal(degree.id, { name: degree.name })
-                    }
-                  >
-                    <IconPencil />
-                  </ActionIcon>
-                </Table.Td>
+    <>
+      <title>ITE - Grados</title>
+      <CaslProtectedRoute
+        action={CaslAction.READ}
+        subject={CaslSubject.DEGREES}
+      >
+        <div className="flex flex-col gap-3">
+          <Title>Grados</Title>
+          <div className="flex justify-end">
+            <Button onClick={openCreateDegreeModal}>Nuevo</Button>
+          </div>
+          <PaginationBar
+            currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
+            sortByOptions={[{ label: "Nombre", value: "name" }]}
+            totalPages={degrees?.meta?.totalPages ?? 0}
+          />
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Nombre</Table.Th>
+                <Table.Th />
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </div>
-    </CaslProtectedRoute>
+            </Table.Thead>
+            <Table.Tbody>
+              {degrees?.data?.map((degree) => (
+                <Table.Tr key={degree.id}>
+                  <Table.Td>{degree.name}</Table.Td>
+                  <Table.Td>
+                    <ActionIcon
+                      onClick={() =>
+                        openUpdateDegreeModal(degree.id, { name: degree.name })
+                      }
+                    >
+                      <IconPencil />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </div>
+      </CaslProtectedRoute>
+    </>
   );
 }

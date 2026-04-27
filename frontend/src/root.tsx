@@ -3,7 +3,11 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "./globals.css";
 import "@fontsource-variable/noto-sans/wght.css";
-import { MantineProvider, mantineHtmlProps } from "@mantine/core";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { Provider } from "react-redux";
@@ -18,10 +22,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <Meta />
         <Links />
+        <ColorSchemeScript />
       </head>
       <body>
         <Provider store={store}>
-          <MantineProvider theme={theme}>
+          <MantineProvider defaultColorScheme="auto" theme={theme}>
             <Notifications />
             <ModalsProvider>{children}</ModalsProvider>
           </MantineProvider>

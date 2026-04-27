@@ -30,7 +30,7 @@ export function OtpTemplate({ code, user }: OtpTemplateProps) {
             <h1 className="text-center">Biblioteca ITE</h1>
             <h3 className="font-bold">¡Hola {user.name}!</h3>
             <p>Utiliza este código para iniciar sesión:</p>
-            <div className="max-w-4xl rounded-lg bg-[#eeeeee] p-1">
+            <div className="max-w-4xl bg-[#eeeeee] p-1">
               <p className="text-center text-3xl text-[#404041] tracking-widest">
                 {code}
               </p>

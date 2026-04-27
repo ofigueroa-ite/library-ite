@@ -47,7 +47,7 @@ export function Form<T extends object>({
       <div className="flex flex-col gap-3">
         {children ? children(form) : null}
         <div className="flex justify-end gap-3">
-          <Button color="iteGray" onClick={onCancel} variant="white">
+          <Button onClick={onCancel} variant="subtle">
             Cancelar
           </Button>
           <Button type="submit">Aceptar</Button>

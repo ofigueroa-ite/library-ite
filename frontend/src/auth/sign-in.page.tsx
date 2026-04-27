@@ -82,6 +82,7 @@ export default function SignInPage() {
 
   return (
     <div className="flex h-dvh items-center justify-center">
+      <title>ITE - Iniciar Sesión</title>
       <Transition
         duration={300}
         enterDelay={400}
@@ -94,7 +95,7 @@ export default function SignInPage() {
             <Title order={1} ta="center">
               Biblioteca ITE
             </Title>
-            <Paper bg="iteGray.0" className="p-8">
+            <Paper className="p-8">
               <form
                 className="flex flex-col items-center justify-center gap-5"
                 onSubmit={signInForm.onSubmit((values) =>
@@ -110,6 +111,7 @@ export default function SignInPage() {
                   placeholder="tucorreo@ite.edu.mx"
                   withAsterisk
                   {...signInForm.getInputProps("email")}
+                  variant="default"
                 />
                 <Button fullWidth loading={isSignInLoading} type="submit">
                   Enviar
@@ -134,7 +136,7 @@ export default function SignInPage() {
                 {signInForm.values.email}
               </Text>
             </Text>
-            <Paper bg="iteGray.0" className="p-8">
+            <Paper className="p-8">
               <Button
                 className="mb-5"
                 onClick={handleGoBack}

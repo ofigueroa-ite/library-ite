@@ -34,7 +34,10 @@ export const theme = createTheme({
     iteGray,
   },
   primaryColor: "iteBlue",
-  primaryShade: 9,
+  primaryShade: {
+    light: 9,
+    dark: 9,
+  },
   black: iteGray[9],
   defaultRadius: "xs",
 
@@ -84,6 +87,14 @@ export const theme = createTheme({
     MultiSelect: {
       defaultProps: {
         variant: "filled",
+      },
+    },
+    Paper: {
+      styles: {
+        root: {
+          backgroundColor:
+            "light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6))",
+        },
       },
     },
   },
