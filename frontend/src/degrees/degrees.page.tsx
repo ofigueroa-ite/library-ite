@@ -7,19 +7,19 @@ import { CaslSubject } from "~/casl/interfaces/casl-subject.enum";
 import { PaginationBar } from "~/common/components/pagination/pagination-bar";
 import { PaginationSortOrder } from "~/common/interfaces/pagination";
 import {
-  GendersPaginationSortByDto,
-  useGetGendersPageQuery,
-} from "./genders.api";
-import { openCreateGenderModal, openUpdateGenderModal } from "./genders.modals";
+  DegreesPaginationSortByDto,
+  useGetDegreesPageQuery,
+} from "./degrees.api";
+import { openCreateDegreeModal, openUpdateDegreeModal } from "./degrees.modals";
 
-export default function GendersPage() {
+export default function DegreesPage() {
   const [searchParams] = useSearchParams();
 
-  const { data: genders } = useGetGendersPageQuery({
+  const { data: degrees } = useGetDegreesPageQuery({
     search: searchParams.get("search") ?? "",
     sortBy:
-      GendersPaginationSortByDto[
-        searchParams.get("sortBy") as keyof typeof GendersPaginationSortByDto
+      DegreesPaginationSortByDto[
+        searchParams.get("sortBy") as keyof typeof DegreesPaginationSortByDto
       ],
     sortOrder:
       PaginationSortOrder[
@@ -30,16 +30,16 @@ export default function GendersPage() {
   });
 
   return (
-    <CaslProtectedRoute action={CaslAction.READ} subject={CaslSubject.GENDERS}>
+    <CaslProtectedRoute action={CaslAction.READ} subject={CaslSubject.DEGREES}>
       <div className="flex flex-col gap-3">
-        <Title>Géneros</Title>
+        <Title>Grados</Title>
         <div className="flex justify-end">
-          <Button onClick={openCreateGenderModal}>Nuevo</Button>
+          <Button onClick={openCreateDegreeModal}>Nuevo</Button>
         </div>
         <PaginationBar
           currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
           sortByOptions={[{ label: "Nombre", value: "name" }]}
-          totalPages={genders?.meta?.totalPages ?? 0}
+          totalPages={degrees?.meta?.totalPages ?? 0}
         />
         <Table>
           <Table.Thead>
@@ -49,13 +49,13 @@ export default function GendersPage() {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {genders?.data?.map((gender) => (
-              <Table.Tr key={gender.id}>
-                <Table.Td>{gender.name}</Table.Td>
+            {degrees?.data?.map((degree) => (
+              <Table.Tr key={degree.id}>
+                <Table.Td>{degree.name}</Table.Td>
                 <Table.Td>
                   <ActionIcon
                     onClick={() =>
-                      openUpdateGenderModal(gender.id, { name: gender.name })
+                      openUpdateDegreeModal(degree.id, { name: degree.name })
                     }
                   >
                     <IconPencil />
