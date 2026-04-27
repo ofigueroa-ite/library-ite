@@ -5,4 +5,5 @@ export enum CaslSubject {
   ROLES = "roles",
   USERS = "users",
   USERS_ROLES = "users_roles",
+  GENDERS = "genders",
 }
