@@ -11,7 +11,8 @@ import {
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-import { Outlet } from "react-router";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router";
 import { CaslAction } from "~/casl/interfaces/casl-action.enum";
 import { useMeQuery } from "../auth/auth.api";
 import { defineAbilityFor } from "../casl/ability";
@@ -28,9 +29,13 @@ export const middleware = [authMiddleware];
 
 export default function AdminLayout() {
   const { data } = useMeQuery();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
+  const location = useLocation();
 
   const caslAbility = defineAbilityFor(data ?? ({ roles: [] } as User));
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: close navbar on route change
+  useEffect(() => close(), [location.key, close]);
 
   return (
     <CaslAbilityContext.Provider value={caslAbility}>
@@ -45,14 +50,14 @@ export default function AdminLayout() {
         withBorder={false}
       >
         <AppShell.Header>
-          <div className="flex h-full items-center justify-between">
-            <Burger hiddenFrom="sm" onClick={toggle} opened={opened} />
+          <div className="flex h-full items-center justify-between sm:justify-end">
+            <Burger className="sm:hidden" onClick={toggle} opened={opened} />
             <ProfileButton />
           </div>
         </AppShell.Header>
         <AppShell.Navbar bg="iteBlue">
           <div className="flex justify-end p-3">
-            <NavbarCloseButton c="white" hiddenFrom="sm" />
+            <NavbarCloseButton c="white" hiddenFrom="sm" onClick={close} />
           </div>
           <div className="m-5 flex flex-col items-center justify-center">
             <Text c="white" fw="bold" size="md">

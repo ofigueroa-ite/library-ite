@@ -35,47 +35,50 @@ export default function DepartmentsPage() {
   });
 
   return (
-    <CaslProtectedRoute
-      action={CaslAction.READ}
-      subject={CaslSubject.DEPARTMENTS}
-    >
-      <div className="flex flex-col gap-3">
-        <Title>Departamentos</Title>
-        <div className="flex justify-end">
-          <Button onClick={openCreateDepartmentModal}>Nuevo</Button>
-        </div>
-        <PaginationBar
-          currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
-          sortByOptions={[{ label: "Nombre", value: "name" }]}
-          totalPages={departments?.meta?.totalPages ?? 0}
-        />
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Nombre</Table.Th>
-              <Table.Th />
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {departments?.data?.map((department) => (
-              <Table.Tr key={department.id}>
-                <Table.Td>{department.name}</Table.Td>
-                <Table.Td>
-                  <ActionIcon
-                    onClick={() =>
-                      openUpdateDepartmentModal(department.id, {
-                        name: department.name,
-                      })
-                    }
-                  >
-                    <IconPencil />
-                  </ActionIcon>
-                </Table.Td>
+    <>
+      <title>ITE - Departamentos</title>
+      <CaslProtectedRoute
+        action={CaslAction.READ}
+        subject={CaslSubject.DEPARTMENTS}
+      >
+        <div className="flex flex-col gap-3">
+          <Title>Departamentos</Title>
+          <div className="flex justify-end">
+            <Button onClick={openCreateDepartmentModal}>Nuevo</Button>
+          </div>
+          <PaginationBar
+            currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
+            sortByOptions={[{ label: "Nombre", value: "name" }]}
+            totalPages={departments?.meta?.totalPages ?? 0}
+          />
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Nombre</Table.Th>
+                <Table.Th />
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </div>
-    </CaslProtectedRoute>
+            </Table.Thead>
+            <Table.Tbody>
+              {departments?.data?.map((department) => (
+                <Table.Tr key={department.id}>
+                  <Table.Td>{department.name}</Table.Td>
+                  <Table.Td>
+                    <ActionIcon
+                      onClick={() =>
+                        openUpdateDepartmentModal(department.id, {
+                          name: department.name,
+                        })
+                      }
+                    >
+                      <IconPencil />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </div>
+      </CaslProtectedRoute>
+    </>
   );
 }

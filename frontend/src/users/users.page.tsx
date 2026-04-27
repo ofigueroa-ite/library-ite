@@ -27,54 +27,60 @@ export default function UsersPage() {
   });
 
   return (
-    <CaslProtectedRoute action={CaslAction.MANAGE} subject={CaslSubject.USERS}>
-      <div className="flex flex-col gap-3">
-        <Title>Usuarios</Title>
-        <div className="flex justify-end">
-          <Button onClick={openCreateUserModal}>Nuevo</Button>
-        </div>
-        <PaginationBar
-          currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
-          sortByOptions={[
-            { label: "Nombre", value: "name" },
-            { label: "Apellido", value: "surname" },
-            { label: "Correo", value: "email" },
-          ]}
-          totalPages={users?.meta?.totalPages ?? 0}
-        />
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Nombre</Table.Th>
-              <Table.Th>Apellido</Table.Th>
-              <Table.Th>Correo</Table.Th>
-              <Table.Th>Roles</Table.Th>
-              <Table.Th />
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {users?.data?.map((user) => (
-              <Table.Tr key={user.id}>
-                <Table.Td>{user.name}</Table.Td>
-                <Table.Td>{user.surname}</Table.Td>
-                <Table.Td>{user.email}</Table.Td>
-                <Table.Td>
-                  {user.roles?.map((role) => (
-                    <Badge key={role.id}>{role.name}</Badge>
-                  ))}
-                </Table.Td>
-                <Table.Td>
-                  <ActionIcon
-                    onClick={() => openUpdateUserModal(user.id, user)}
-                  >
-                    <IconPencil />
-                  </ActionIcon>
-                </Table.Td>
+    <>
+      <title>ITE - Usuarios</title>
+      <CaslProtectedRoute
+        action={CaslAction.MANAGE}
+        subject={CaslSubject.USERS}
+      >
+        <div className="flex flex-col gap-3">
+          <Title>Usuarios</Title>
+          <div className="flex justify-end">
+            <Button onClick={openCreateUserModal}>Nuevo</Button>
+          </div>
+          <PaginationBar
+            currentPage={Number.parseInt(searchParams.get("page") ?? "1", 10)}
+            sortByOptions={[
+              { label: "Nombre", value: "name" },
+              { label: "Apellido", value: "surname" },
+              { label: "Correo", value: "email" },
+            ]}
+            totalPages={users?.meta?.totalPages ?? 0}
+          />
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Nombre</Table.Th>
+                <Table.Th>Apellido</Table.Th>
+                <Table.Th>Correo</Table.Th>
+                <Table.Th>Roles</Table.Th>
+                <Table.Th />
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </div>
-    </CaslProtectedRoute>
+            </Table.Thead>
+            <Table.Tbody>
+              {users?.data?.map((user) => (
+                <Table.Tr key={user.id}>
+                  <Table.Td>{user.name}</Table.Td>
+                  <Table.Td>{user.surname}</Table.Td>
+                  <Table.Td>{user.email}</Table.Td>
+                  <Table.Td>
+                    {user.roles?.map((role) => (
+                      <Badge key={role.id}>{role.name}</Badge>
+                    ))}
+                  </Table.Td>
+                  <Table.Td>
+                    <ActionIcon
+                      onClick={() => openUpdateUserModal(user.id, user)}
+                    >
+                      <IconPencil />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </div>
+      </CaslProtectedRoute>
+    </>
   );
 }
