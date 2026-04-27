@@ -1,0 +1,16 @@
+.albatross {
+  fill: #404041;
+  animation: fadeIn 2s ease 0s 1 normal forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
