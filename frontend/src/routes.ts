@@ -12,6 +12,8 @@ export default [
     route("genders", "./genders/genders.page.tsx"),
     route("users", "./users/users.page.tsx"),
     route("users/roles", "./roles/roles.page.tsx"),
+    route("students", "./students/students.page.tsx"),
+    route("/students/degrees", "./degrees/degrees.page.tsx"),
   ]),
   route("sign-in", "./auth/sign-in.page.tsx"),
 ] satisfies RouteConfig;

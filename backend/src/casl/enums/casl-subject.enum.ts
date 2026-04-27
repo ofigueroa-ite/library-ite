@@ -6,4 +6,5 @@ export enum CaslSubject {
   USERS = "users",
   USERS_ROLES = "users_roles",
   GENDERS = "genders",
+  DEGREES = "degrees",
 }

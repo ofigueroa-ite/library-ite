@@ -26,7 +26,7 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithAuthRedirect,
   endpoints: () => ({}),
-  tagTypes: ["Me", "Roles", "Users", "UsersRoles", "Genders"],
+  tagTypes: ["Me", "Roles", "Users", "UsersRoles", "Genders", "Degrees"],
 });
 
 export function isFetchBaseQueryError(

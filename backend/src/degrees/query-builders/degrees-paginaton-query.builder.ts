@@ -1,10 +1,10 @@
 import { PaginationQueryBuilder } from "src/common/query-builders/pagination-query.builder";
 import { Repository } from "typeorm";
-import { Gender } from "../genders.entity";
+import { Degree } from "../degrees.entity";
 
-export class GendersPaginationQueryBuilder extends PaginationQueryBuilder<Gender> {
-  constructor(repository: Repository<Gender>) {
-    super(repository.createQueryBuilder("gender"));
+export class DegreesPaginationQueryBuilder extends PaginationQueryBuilder<Degree> {
+  constructor(repository: Repository<Degree>) {
+    super(repository.createQueryBuilder("degree"));
   }
 
   withSearch(search?: string): this {

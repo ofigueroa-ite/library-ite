@@ -2,8 +2,10 @@ import { AppShell, Burger, Divider, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconChartTreemap,
+  IconFileCertificate,
   IconHome,
   IconIcons,
+  IconSchool,
   IconUserShield,
   IconUsers,
 } from "@tabler/icons-react";
@@ -67,6 +69,21 @@ export default function AdminLayout() {
               leftSection={<IconChartTreemap />}
               route="/dashboard"
             />
+            {caslAbility.can(CaslAction.READ, CaslSubject.DEGREES) && (
+              <NavbarButton
+                label="Estudiantes"
+                leftSection={<IconSchool />}
+                route="/students"
+              >
+                {caslAbility.can(CaslAction.READ, CaslSubject.DEGREES) && (
+                  <NavbarButton
+                    label="Grados"
+                    leftSection={<IconFileCertificate />}
+                    route="/students/degrees"
+                  />
+                )}
+              </NavbarButton>
+            )}
             {caslAbility.can(CaslAction.READ, CaslSubject.GENDERS) && (
               <NavbarButton
                 label="Géneros"
