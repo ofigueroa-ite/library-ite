@@ -1,8 +1,9 @@
 import { AppShell, Burger, Divider, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconChartTreemap,
   IconHome,
-  IconLayoutDashboard,
+  IconIcons,
   IconUserShield,
   IconUsers,
 } from "@tabler/icons-react";
@@ -63,9 +64,16 @@ export default function AdminLayout() {
             <NavbarButton label="Inicio" leftSection={<IconHome />} route="/" />
             <NavbarButton
               label="Panel"
-              leftSection={<IconLayoutDashboard />}
+              leftSection={<IconChartTreemap />}
               route="/dashboard"
             />
+            {caslAbility.can(CaslAction.READ, CaslSubject.GENDERS) && (
+              <NavbarButton
+                label="Géneros"
+                leftSection={<IconIcons />}
+                route="/genders"
+              />
+            )}
             {caslAbility.can(CaslAction.READ, CaslSubject.USERS) && (
               <NavbarButton
                 label="Usuarios"

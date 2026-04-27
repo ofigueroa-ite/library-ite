@@ -9,6 +9,7 @@ export default [
   index("index/index.page.tsx"),
   layout("admin/admin.layout.tsx", [
     route("dashboard", "./dashboard/dashboard.page.tsx"),
+    route("genders", "./genders/genders.page.tsx"),
     route("users", "./users/users.page.tsx"),
     route("users/roles", "./roles/roles.page.tsx"),
   ]),
