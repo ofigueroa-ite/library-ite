@@ -5,9 +5,11 @@ import {
   IconFileCertificate,
   IconHome,
   IconIcons,
+  IconIdBadge2,
   IconSchool,
   IconUserShield,
   IconUsers,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import { Outlet } from "react-router";
 import { CaslAction } from "~/casl/interfaces/casl-action.enum";
@@ -80,6 +82,21 @@ export default function AdminLayout() {
                     label="Grados"
                     leftSection={<IconFileCertificate />}
                     route="/students/degrees"
+                  />
+                )}
+              </NavbarButton>
+            )}
+            {caslAbility.can(CaslAction.READ, CaslSubject.DEPARTMENTS) && (
+              <NavbarButton
+                label="Personal"
+                leftSection={<IconIdBadge2 />}
+                route="/staff"
+              >
+                {caslAbility.can(CaslAction.READ, CaslSubject.DEPARTMENTS) && (
+                  <NavbarButton
+                    label="Departamentos"
+                    leftSection={<IconUsersGroup />}
+                    route="/staff/departments"
                   />
                 )}
               </NavbarButton>

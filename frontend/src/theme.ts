@@ -51,8 +51,8 @@ export const theme = createTheme({
     },
     ActionIcon: {
       defaultProps: {
-        variant: "subtle",
         radius: "xl",
+        variant: "subtle",
       },
     },
     TextInput: {
@@ -74,7 +74,6 @@ export const theme = createTheme({
       defaultProps: {
         striped: true,
         withRowBorders: false,
-        stripedColor: "iteGray.0",
       },
     },
     NumberInput: {

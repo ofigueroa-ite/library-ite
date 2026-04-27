@@ -63,7 +63,6 @@ export function PaginationBar(props: PaginationBarProps) {
             }
             onChange={(value) => handleParamChange("sortOrder", value)}
             size="lg"
-            variant="white"
           />
         </div>
         <Pagination
