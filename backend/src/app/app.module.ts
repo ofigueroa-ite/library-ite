@@ -16,6 +16,7 @@ import { PermissionsModule } from "src/permissions/permissions.module";
 import { RolesModule } from "src/roles/roles.module";
 import { SeederModule } from "src/seeder/seeder.module";
 import { StudentsModule } from "src/students/students.module";
+import { StudentsDegreesModule } from "src/students-degrees/students-degrees.module";
 import { UsersModule } from "src/users/users.module";
 import { UsersRolesModule } from "src/users-roles/users-roles.module";
 
@@ -93,6 +94,7 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     DegreesModule,
     DepartmentsModule,
     StudentsModule,
+    StudentsDegreesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthJwtGuard },

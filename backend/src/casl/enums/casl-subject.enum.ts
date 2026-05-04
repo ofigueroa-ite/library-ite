@@ -9,4 +9,5 @@ export enum CaslSubject {
   DEGREES = "degrees",
   DEPARTMENTS = "departments",
   STUDENTS = "students",
+  STUDENTS_DEGREES = "students_degrees",
 }

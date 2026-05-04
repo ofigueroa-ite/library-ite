@@ -186,7 +186,7 @@ export class StudentsService implements CrudService<Student> {
   }
 
   async delete(id: string): Promise<void> {
-    const student = await this.findByIdOrThrow(id);
-    await this.studentsRepository.remove(student);
+    await this.findByIdOrThrow(id);
+    await this.studentsRepository.softDelete({ id });
   }
 }

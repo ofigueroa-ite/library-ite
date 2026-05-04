@@ -1,5 +1,6 @@
 import { BaseEntity } from "src/common/entities/base.entity";
-import { Column, Entity, Index } from "typeorm";
+import { StudentsDegrees } from "src/students-degrees/students-degrees.entity";
+import { Column, Entity, Index, OneToMany } from "typeorm";
 
 @Entity("degrees")
 @Index("UQ_degrees_name", ["name"], {
@@ -11,4 +12,10 @@ export class Degree extends BaseEntity {
     nullable: false,
   })
   name: string;
+
+  @OneToMany(
+    () => StudentsDegrees,
+    (sd) => sd.degree
+  )
+  students: StudentsDegrees[];
 }
