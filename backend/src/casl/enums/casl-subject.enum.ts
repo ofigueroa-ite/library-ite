@@ -8,4 +8,5 @@ export enum CaslSubject {
   GENDERS = "genders",
   DEGREES = "degrees",
   DEPARTMENTS = "departments",
+  STUDENTS = "students",
 }

@@ -15,6 +15,7 @@ import { OtpModule } from "src/otp/otp.module";
 import { PermissionsModule } from "src/permissions/permissions.module";
 import { RolesModule } from "src/roles/roles.module";
 import { SeederModule } from "src/seeder/seeder.module";
+import { StudentsModule } from "src/students/students.module";
 import { UsersModule } from "src/users/users.module";
 import { UsersRolesModule } from "src/users-roles/users-roles.module";
 
@@ -91,6 +92,7 @@ import { UsersRolesModule } from "src/users-roles/users-roles.module";
     GendersModule,
     DegreesModule,
     DepartmentsModule,
+    StudentsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthJwtGuard },
