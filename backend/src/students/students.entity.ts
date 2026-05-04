@@ -1,5 +1,6 @@
 import { BaseEntity } from "src/common/entities/base.entity";
-import { Column, Entity, Index } from "typeorm";
+import { StudentsDegrees } from "src/students-degrees/students-degrees.entity";
+import { Column, Entity, Index, OneToMany } from "typeorm";
 
 @Entity("students")
 export class Student extends BaseEntity {
@@ -31,4 +32,10 @@ export class Student extends BaseEntity {
   @Column({ name: "maternal_surname" })
   @Index("IDX_maternal_surname")
   maternalSurname: string;
+
+  @OneToMany(
+    () => StudentsDegrees,
+    (sd) => sd.student
+  )
+  degrees: StudentsDegrees[];
 }

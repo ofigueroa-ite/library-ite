@@ -4,7 +4,16 @@ import { Repository } from "typeorm";
 
 export class StudentsPaginationQueryBuilder extends PaginationQueryBuilder<Student> {
   constructor(repository: Repository<Student>) {
-    super(repository.createQueryBuilder("student"));
+    super(
+      repository
+        .createQueryBuilder("student")
+        .leftJoinAndSelect(
+          "student.degrees",
+          "studentsDegrees",
+          "studentsDegrees.degree IS NOT NULL"
+        )
+        .leftJoinAndSelect("studentsDegrees.degree", "degree")
+    );
   }
 
   withSearch(search?: string): this {
